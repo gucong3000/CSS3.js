@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>CSS3.js DEMO/TEST</title>
+<script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/seajs/2.3.0/sea.js"></script>
+<script src="http://qil-dev.tff.com/script/moxie-swf.js"></script>
+<script src="../build/es5-shim.min.js"></script>
+<script>
+mOxie.Env.swf_url = 'http://qil-dev.tff.com/script/Moxie.cdn.swf';
+seajs.config({
+	alias: {
+		"mOxie": window.FileReader ? "" : "http://qil-dev.tff.com/script/moxie-swf.js",
+		"PIE": document.documentMode > 8 ? "PIE_IE9.js" : window.FileReader ? "" : "PIE_IE678.js"
+	},
+	base: "../build/"
+});
+seajs.use(["StyleFix", "PrefixFree", "selectivizr", "units"], function(StyleFix, PrefixFree) {
+	window.StyleFix = StyleFix;
+	function ajaxtest(url) {
+		url = "http://dn-toursforfun.qbox.me/" + url;
+		console.log(url + "\tstart");
+		stylefix.get(url, function(text) {
+			console.log(url + "\tend");
+		});
+	}
+	// ajaxtest("js/base.js");
+	// ajaxtest("css/base.css");
+
+	function querytest(selector) {
+		console.log(selector);
+		stylefix.query(selector).forEach(function(elem) {
+			console.log(elem);
+		});
+	}
+	// querytest("html");
+	//	StyleFix.load("http://qil-dev.tff.com/css/base.css");
+	StyleFix.load("css/style.css");
+});
+</script>
+</head>
+<body>
+
+test
+
+<input type="text">
+
+</body>
+
+
+</html>

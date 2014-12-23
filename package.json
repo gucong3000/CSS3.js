@@ -1,0 +1,35 @@
+{
+  "name": "CSS3.js",
+  "title": "CSS3.js",
+  "description": "JavaScript library for browser info",
+  "version": "0.0.8",
+  "homepage": "http://gucong3000.github.io/CSS3.js/",
+  "author": {
+    "name": "gucong",
+    "url": "https://github.com/gucong3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gucong3000/CSS3.js.git"
+  },
+  "keywords": [
+    "browser",
+    "javascript",
+    "library"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt"
+    }
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "opener": "^1.4.0",
+    "yuidocjs": "^0.3.50",
+    "gulp": "^3.8.10",
+    "gulp-wrapper": "^0.1.5",
+    "gulp-plumber": "^0.6.6",
+    "gulp-jshint": "^1.9.0"
+  }
+}
