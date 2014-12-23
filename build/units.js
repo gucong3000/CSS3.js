@@ -57,14 +57,27 @@
 			rem[2] = "pt";
 		}
 		// 计算显示器dpi值
-		dpi = screen.logicalXDPI || (window.devicePixelRatio * 96) || dpi;
+		var innerHeight = window.innerHeight || root.clientHeight,
+			innerWidth = window.innerWidth || root.clientWidth,
+			logicalXDPI = screen.logicalXDPI,
+			ratio = window.devicePixelRatio || (screen.deviceXDPI / logicalXDPI) || 1;
+
+		dpi = logicalXDPI || (ratio * 96);
+
 		// 计算每单位的vw、vh、vmax、vmin换算像素值
-		vh = (window.innerHeight || root.clientHeight) / 100;
-		vw = (window.innerWidth || root.clientWidth) / 100;
+		vh = innerHeight / 100;
+		vw = innerWidth / 100;
 		relUnits.vmax = Math.max(vh, vw);
 		relUnits.vmin = Math.min(vh, vw);
 		relUnits.vh = vh;
 		relUnits.vw = vw;
+
+		// 对外暴漏供调用的数据
+		self.ratio = ratio;
+		self.dpi = dpi;
+		self.innerHeight = innerHeight;
+		self.innerWidth = innerWidth;
+
 	}
 
 	// 数字精确到小数点后四位，再往后四舍五入
