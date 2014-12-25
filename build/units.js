@@ -1,4 +1,4 @@
-"use strict";
+(function(f){typeof define==="function"?define("units",f):f()})(function(require,exports,module){"use strict";
 (function(window) {
 	var StyleFix = window.StyleFix || require("stylefix"),
 		getComputedStyle = window.getComputedStyle,
@@ -177,4 +177,4 @@
 	} catch (e) {
 		window.units = self;
 	}
-})(window);
+})(window);});

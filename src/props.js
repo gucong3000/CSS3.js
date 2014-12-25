@@ -1,7 +1,7 @@
 "use strict";
 (function(window) {
 
-	var StyleFix = window.StyleFix || require("StyleFix"),
+	var StyleFix = window.StyleFix || require("stylefix"),
 		ieVersion = StyleFix.ieVersion,
 		properties = ieVersion < 9 ? ["border-radius", "box-shadow"] : [],
 		attachCache = {},
@@ -86,8 +86,8 @@
 			if (props) {
 				if (raw) {
 					// 注册需要应用PIE的css选择符
-					props.forEach(function(rep) {
-						domPatches[rep.replace(/^\s+/, "").replace(/\s*{[\s\S]*$/, "").replace(/[\s\t\r\n]+/g, " ")] = {};
+					props.forEach(function(raw) {
+						domPatches[raw.replace(/^\s+/, "").replace(/\s*{[\s\S]*$/, "").replace(/[\s\t\r\n]+/g, " ")] = {};
 					});
 				} else {
 					// 将DOM元素应用PIE

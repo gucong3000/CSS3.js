@@ -1,4 +1,4 @@
-/**
+(function(f){typeof define==="function"?define("stylefix",f):f()})(function(require,exports,module){/**
  * StyleFix 1.0.3
  * @author Lea Verou
  * MIT license
@@ -450,4 +450,4 @@
 		module.exports = self;
 	} catch (e) {
 	}
-})(window);
+})(window);});

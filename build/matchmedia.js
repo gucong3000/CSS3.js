@@ -1,4 +1,4 @@
-/* MediaMatch v.2.0.2 - Testing css media queries in Javascript. Authors & copyright (c) 2013: WebLinc, David Knight. */
+(function(f){typeof define==="function"?define("matchmedia",f):f()})(function(require,exports,module){/* MediaMatch v.2.0.2 - Testing css media queries in Javascript. Authors & copyright (c) 2013: WebLinc, David Knight. */
 
 "use strict";
 (function(win) {
@@ -343,4 +343,4 @@
             win.matchMedia = self;
         }
     }
-})(window);
+})(window);});

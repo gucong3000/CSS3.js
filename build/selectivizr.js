@@ -1,4 +1,4 @@
-/*
+(function(f){typeof define==="function"?define("selectivizr",f):f()})(function(require,exports,module){/*
 selectivizr v1.0.3b - (c) Keith Clark, freely distributable under the terms
 of the MIT license.
 
@@ -408,4 +408,4 @@ References:
 			window.Selectivizr = self;
 		}
 	}
-})(window);
+})(window);});
