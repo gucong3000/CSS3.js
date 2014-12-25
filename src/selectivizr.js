@@ -31,8 +31,7 @@ References:
 	// developer didn't use conditional comments.
 
 	var StyleFix = window.StyleFix || require("StyleFix");
-	var doc = document;
-	var root = doc.documentElement;
+	// var root = doc.documentElement;
 	var ieVersion = StyleFix.ieVersion;
 
 	// ========================= Common Objects ============================
@@ -150,11 +149,11 @@ References:
 		if (pseudo.charAt(0) === ":") {
 			switch (pseudo.slice(1)) {
 
-				case "root":
-					applyClass = function(e) {
-						return isNegated ? e !== root : e === root;
-					};
-					break;
+				// case "root":
+				// 	applyClass = function(e) {
+				// 		return isNegated ? e !== root : e === root;
+				// 	};
+				// 	break;
 
 				case "target":
 					// :target is only supported in IE8
@@ -406,7 +405,7 @@ References:
 		try {
 			module.exports = self;
 		} catch (e) {
-			window.selectivizr = self;
+			window.Selectivizr = self;
 		}
 	}
 })(window);

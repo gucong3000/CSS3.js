@@ -1,5 +1,7 @@
 /**
- * PrefixFree
+ * PrefixFree 1.0.7
+ * @author Lea Verou
+ * MIT license
  */
 
 "use strict";

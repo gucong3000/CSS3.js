@@ -109,38 +109,21 @@
 		}
 	}
 
-	// 找出大字符串中的css长度单位，替换浏览器不支持的长度单位为px，原始值用注释方式存起来“ 192px /* RawVal`10vw` */”
-	function cssUnits(css) {
-		return css.replace(
-			// 先将保存在注释中的原始值还原
-			/\b[\d\.]+px\s*\/\*\s*RawVal`(.*)`\s*\*\//g,
-			"$1"
-		).replace(
-			// 将浏览器不识别的长度单位长度单位转化为px，原始值存进注释
-			/\b[\d\.]+\w+\b/g,
-			function(rawValue) {
-				var newValue = parse(rawValue);
-				return newValue ? newValue + "px /* RawVal`" + rawValue + "` */" : rawValue;
-			}
-		);
-	}
-
 	// 按优先执行的原则绑定事件
 	function addEvent(eventName, eventHandler) {
+		// 每次事件运行时都重新绑定，以便保证绑定在最后
+		// IE下，后绑定的事件会先运行
+		function eventHandlerFn(){
+			window.detachEvent(eventName, eventHandlerFn);
+			window.attachEvent(eventName, eventHandlerFn);
+			eventHandler();
+		}
 		if (addEventListener) {
+			// 将事件处理函数绑定至起泡阶段以便保证优先执行
 			addEventListener(eventName, eventHandler, true);
 		} else {
-			// IE的attachEvent方式绑定的事件，绑定越晚，执行越早
-			StyleFix.ready(function() {
-				setTimeout(function() {
-					window.attachEvent("on" + eventName, eventHandler);
-				}, 250);
-			});
-			// 对外暴漏的self.parse方法，添加resize()，以防未按正确的viewport计算相对长度单位
-			self.parse = function(val) {
-				resize();
-				return parse(val);
-			};
+			eventName = "on" + eventName;
+			window.attachEvent(eventName, eventHandlerFn);
 		}
 	}
 
@@ -172,7 +155,22 @@
 		}
 		tester.parentNode.removeChild(tester);
 	});
-	StyleFix.register(cssUnits);
+
+	// 找出大字符串中的css长度单位，替换浏览器不支持的长度单位为px，原始值用注释方式存起来“ 192px /* RawVal`10vw` */”
+	StyleFix.register(function(css) {
+		return css.replace(
+			// 先将保存在注释中的原始值还原
+			/\b[\d\.]+px\s*\/\*\s*RawVal`(.*)`\s*\*\//g,
+			"$1"
+		).replace(
+			// 将浏览器不识别的长度单位长度单位转化为px，原始值存进注释
+			/\b[\d\.]+\w+\b/g,
+			function(rawValue) {
+				var newValue = parse(rawValue);
+				return newValue ? newValue + "px /* RawVal`" + rawValue + "` */" : rawValue;
+			}
+		);
+	});
 
 	try {
 		module.exports = self;

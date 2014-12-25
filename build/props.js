@@ -1,0 +1,109 @@
+(function(f){typeof define==="function"?define("props",f):f()})(function(require,exports,module){"use strict";
+(function(window) {
+
+	var StyleFix = window.StyleFix || require("StyleFix"),
+		ieVersion = StyleFix.ieVersion,
+		properties = ieVersion < 9 ? ["border-radius", "box-shadow"] : [],
+		attachCache = {},
+		domPatches = {},
+		replace = [];
+
+	function attach(element) {
+		var uniqueID = element.uniqueID;
+		if (!attachCache[uniqueID]) {
+			try {
+				(window.PIE || require("PIE")).attach(element);
+				attachCache[uniqueID] = true;
+			} catch (ex) {}
+		}
+	}
+
+	// IE6-10
+	if (ieVersion < 11) {
+		// 兼容border-image
+		properties.push("border-image");
+
+		// IE6-9
+		if (ieVersion < 10) {
+			// background: xxxx-gradient(...) >>> -pie-background: xxxx-gradient(...)
+			replace.push([
+				/^(background(-\w+)?\s*:\s*\w+-gradient\s*\([^;\}]+)/,
+				"-pie-$1;$1"
+			]);
+
+			properties.push("-pie-background");
+
+			// IE9
+			if (ieVersion === 9) {
+				// background: xxxx-gradient(...) >>> -pie-background: xxxx-gradient(...)
+				replace.push([
+					/^(transform(-\w+)?\s*:[^;\}]+)/,
+					"-ms-$1;$1"
+				]);
+				// filter: Alpha(0.8); >>> NULL;
+				replace.push([
+					/^filter\s*:\s*([^;\}]+)/,
+					function(s, vals) {
+						// Disable some filter that conflict with CSS3
+						vals = vals.split(/\s+(?=\w+\s*[\(\:])/).filter(function(filter) {
+							return !/^(progid\s*\:\s*DXImageTransform\.Microsoft\.)?(Alpha|Matrix|Gradient|FlipH|FlipV)\s*\(/i.test(filter);
+						}).join(" ").trim();
+						return vals ? "filter: " + vals : "";
+					}
+				]);
+				// IE6-8
+			} else if (ieVersion < 8) {
+				// display: inline-block; >>> display: inline;zoom:1;
+				replace.push([
+					/^(display\s*:\s*inline)-block\b/,
+					"$1;zoom:1"
+				]);
+				// IE6
+				if (ieVersion < 7) {
+					// position: fixed; >>> position: absolute;
+					replace.push([
+						/^(position\s*:\s*)fixed\b/,
+						"$1absolute"
+					]);
+					properties.push("-pie-png-fix");
+				}
+			}
+		}
+
+		properties = new RegExp("([^{}]+){[^{}]+(" + properties.join("|") + ")", "g");
+		StyleFix.register(function(css, raw, element) {
+			// css样式内容替换
+			if (replace.length) {
+				css = css.replace(/\b[\w\-]+\s*:[^{};]+([\};]|$)/g, function(prop) {
+					replace.forEach(function(rep) {
+						prop = prop.replace(rep[0], rep[1]);
+					});
+					return prop;
+				});
+			}
+			// 查找需要应用PIE的元素
+			var props = css.match(properties);
+			if (props) {
+				if (raw) {
+					// 注册需要应用PIE的css选择符
+					props.forEach(function(rep) {
+						domPatches[rep.replace(/^\s+/, "").replace(/\s*{[\s\S]*$/, "").replace(/[\s\t\r\n]+/g, " ")] = {};
+					});
+				} else {
+					// 将DOM元素应用PIE
+					attach(element);
+				}
+			}
+			return css;
+		});
+		StyleFix.ready(function() {
+			setInterval(function() {
+				// 遍历已注册的需要应用PIE的css的选择器，查找到DOM元素应用PIE
+				for (var i in domPatches) {
+					StyleFix.query(i).forEach(attach);
+				}
+			}, 250);
+		});
+	}
+
+})(window);});

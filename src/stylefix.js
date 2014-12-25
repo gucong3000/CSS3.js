@@ -1,4 +1,10 @@
-(function(f){typeof define==="function"?define("StyleFix",f):f()})(function(require,exports,module){"use strict";
+/**
+ * StyleFix 1.0.3
+ * @author Lea Verou
+ * MIT license
+ */
+
+"use strict";
 /* global mOxie, ActiveXObject */
 (function(window, undefined) {
 	var selectorEngines = {
@@ -55,13 +61,15 @@
 				if (typeof context === "function") {
 					try {
 						nodeList = context(expr, con);
-						break;
+						if (nodeList && nodeList.length) {
+							break;
+						}
 					} catch (ex) {}
 				}
 			}
 		}
 		// 返回外部DOM选择器找到的DOM或者使用querySelectorAll方法找到的DOM元素
-		return [].slice.call(nodeList || con.querySelectorAll(expr));
+		return nodeList || (con.querySelectorAll ? [].slice.call(con.querySelectorAll(expr)) : []);
 	}
 
 	/**
@@ -334,7 +342,7 @@
 		ready.forEach(function(fn) {
 			fn();
 		});
-		process();
+		setTimeout(process, 0);
 	}
 
 	register(function(css) {
@@ -445,9 +453,9 @@
 		}
 	};
 
+	window.StyleFix = self;
 	try {
 		module.exports = self;
 	} catch (e) {
-		window.StyleFix = self;
 	}
-})(window);});
+})(window);

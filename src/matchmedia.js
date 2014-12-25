@@ -1,4 +1,6 @@
-(function(f){typeof define==="function"?define("matchMedia",f):f()})(function(require,exports,module){"use strict";
+/* MediaMatch v.2.0.2 - Testing css media queries in Javascript. Authors & copyright (c) 2013: WebLinc, David Knight. */
+
+"use strict";
 (function(win) {
     var StyleFix = win.StyleFix || require("StyleFix"),
         units = require("units");
@@ -341,4 +343,4 @@
             win.matchMedia = self;
         }
     }
-})(window);});
+})(window);
