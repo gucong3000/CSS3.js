@@ -445,9 +445,9 @@
 		}
 	};
 
-	window.StyleFix = self;
 	try {
 		module.exports = self;
 	} catch (e) {
+		window.stylefix = self;
 	}
 })(window);

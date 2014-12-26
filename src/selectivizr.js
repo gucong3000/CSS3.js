@@ -30,7 +30,7 @@ References:
 	// handles the script being loaded by non IE browsers because the
 	// developer didn't use conditional comments.
 
-	var StyleFix = window.StyleFix || require("stylefix");
+	var StyleFix = window.stylefix || require("stylefix");
 	// var root = doc.documentElement;
 	var ieVersion = StyleFix.ieVersion;
 
@@ -368,6 +368,7 @@ References:
 		clearTimeout(timer);
 		timer = setTimeout(applyPatches, 250);
 	}
+
 	if (ieVersion < 9) {
 		// :enabled & :disabled polling script (since we can't hook
 		// onpropertychange event when an element is disabled)
@@ -385,13 +386,6 @@ References:
 			});
 		}, 20);
 
-		var self = {
-			patchStyleSheet: patchStyleSheet,
-			enabledWatchers: enabledWatchers,
-			applyPatches: applyPatches,
-			domPatches: domPatches
-		};
-
 		StyleFix.register(function(css, raw) {
 			if (raw) {
 				css = patchStyleSheet(css);
@@ -400,12 +394,18 @@ References:
 			}
 		});
 
-		// StyleFix.ready(lazyInit);
+	}
 
-		try {
-			module.exports = self;
-		} catch (e) {
-			window.Selectivizr = self;
-		}
+	var self = {
+		patchStyleSheet: patchStyleSheet,
+		enabledWatchers: enabledWatchers,
+		applyPatches: applyPatches,
+		domPatches: domPatches
+	};
+
+	try {
+		module.exports = self;
+	} catch (e) {
+		window.selectivizr = self;
 	}
 })(window);

@@ -1,6 +1,6 @@
 "use strict";
 (function(window) {
-	var StyleFix = window.StyleFix || require("stylefix"),
+	var StyleFix = window.stylefix || require("stylefix"),
 		getComputedStyle = window.getComputedStyle,
 		addEventListener = window.addEventListener,
 		document = window.document,
@@ -160,7 +160,7 @@
 	StyleFix.register(function(css) {
 		return css.replace(
 			// 先将保存在注释中的原始值还原
-			/\b[\d\.]+px\s*\/\*\s*RawVal`(.*)`\s*\*\//g,
+			/\b[\d\.]+px\s*\/\*\s*RawVal`([^`]+)`\s*\*\//g,
 			"$1"
 		).replace(
 			// 将浏览器不识别的长度单位长度单位转化为px，原始值存进注释

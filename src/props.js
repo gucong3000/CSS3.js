@@ -1,7 +1,7 @@
 "use strict";
 (function(window) {
 
-	var StyleFix = window.StyleFix || require("stylefix"),
+	var StyleFix = window.stylefix || require("stylefix"),
 		ieVersion = StyleFix.ieVersion,
 		properties = ieVersion < 9 ? ["border-radius", "box-shadow"] : [],
 		attachCache = {},
@@ -27,22 +27,22 @@
 		if (ieVersion < 10) {
 			// background: xxxx-gradient(...) >>> -pie-background: xxxx-gradient(...)
 			replace.push([
-				/^(background(-\w+)?\s*:\s*\w+-gradient\s*\([^;\}]+)/,
-				"-pie-$1;$1"
+				/^(background(-\w+)?\s*:\s*(\w+-)+gradient\s*\([^;\}]+)/i,
+				"-pie-$1;"
 			]);
 
 			properties.push("-pie-background");
 
 			// IE9
 			if (ieVersion === 9) {
-				// background: xxxx-gradient(...) >>> -pie-background: xxxx-gradient(...)
+				// transform: xxxx >>> -ms-transform: xxxx
 				replace.push([
-					/^(transform(-\w+)?\s*:[^;\}]+)/,
-					"-ms-$1;$1"
+					/^(transform(-\w+)?\s*:[^;\}]+)/i,
+					"-ms-$1;"
 				]);
 				// filter: Alpha(0.8); >>> NULL;
 				replace.push([
-					/^filter\s*:\s*([^;\}]+)/,
+					/^filter\s*:\s*([^;\}]+)/i,
 					function(s, vals) {
 						// Disable some filter that conflict with CSS3
 						vals = vals.split(/\s+(?=\w+\s*[\(\:])/).filter(function(filter) {
@@ -55,14 +55,14 @@
 			} else if (ieVersion < 8) {
 				// display: inline-block; >>> display: inline;zoom:1;
 				replace.push([
-					/^(display\s*:\s*inline)-block\b/,
+					/^(display\s*:\s*inline)-block\b/i,
 					"$1;zoom:1"
 				]);
 				// IE6
 				if (ieVersion < 7) {
 					// position: fixed; >>> position: absolute;
 					replace.push([
-						/^(position\s*:\s*)fixed\b/,
+						/^(position\s*:\s*)fixed\b/i,
 						"$1absolute"
 					]);
 					properties.push("-pie-png-fix");
@@ -74,7 +74,9 @@
 		StyleFix.register(function(css, raw, element) {
 			// css样式内容替换
 			if (replace.length) {
+				// 将所有css属性拆解
 				css = css.replace(/\b[\w\-]+\s*:[^{};]+([\};]|$)/g, function(prop) {
+					// 将单条css属性hack
 					replace.forEach(function(rep) {
 						prop = prop.replace(rep[0], rep[1]);
 					});

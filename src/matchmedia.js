@@ -2,7 +2,7 @@
 
 "use strict";
 (function(win) {
-    var StyleFix = win.StyleFix || require("stylefix"),
+    var StyleFix = win.stylefix || require("stylefix"),
         units = require("units");
 
     // Internal globals

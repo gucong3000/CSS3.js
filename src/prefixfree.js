@@ -9,7 +9,7 @@
 	var document = window.document,
 		root = document.documentElement,
 		getComputedStyle = window.getComputedStyle,
-		StyleFix = window.StyleFix || require("StyleFix");
+		StyleFix = window.stylefix || require("stylefix");
 
 	if (!StyleFix || !getComputedStyle) {
 		return;
