@@ -89,7 +89,9 @@
 		error = error || noop;
 		// 优先使用缓存中的内容
 		if (response = responseCache[url]) {
-			callback(response);
+			setTimeout(function() {
+				callback(response);
+			});
 			// 同一个url的并发请求优先使用缓存而非另外发请求
 		} else if (request = requestCache[url]) {
 			request.push(callback);
@@ -208,7 +210,7 @@
 			css = css.replace(new RegExp("\\b(behavior:\\s*?url\\('?\"?)" + escaped_base, "gi"), "$1");
 			var style = document.createElement("style");
 			style.setAttribute("data-href", url);
-			if (before) {
+			if (before && before.parentNode) {
 				// 如果设置了插入位置，则插入该位置之后
 				before.parentNode.insertBefore(style, before);
 			} else {
@@ -379,7 +381,6 @@
 			// Standards-based browsers support DOMContentLoaded
 		} else if (document.addEventListener) {
 			// Use the handy event callback
-			console.log(fn, "asdsads");
 			document.addEventListener("DOMContentLoaded", completed, false);
 
 			// If IE event model is used
