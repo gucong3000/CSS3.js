@@ -18,13 +18,20 @@ function errrHandler(e) {
 function compiler() {
 	var wrapper = require("gulp-wrapper"),
 		plumber = require("gulp-plumber"),
-		jshint = require("gulp-jshint");
+		jshint = require("gulp-jshint"),
+		uglify = require("gulp-uglify");
 
 	gulp.src("./src/**/*.js")
 		.pipe(plumber(errrHandler))
 		.pipe(jshint())
 		.pipe(jshint.reporter("fail"))
 		.pipe(jshint.reporter())
+		.pipe(uglify({
+			//保留IE的jscript条件注释
+			preserveComments: function(o, info) {
+				return /@(cc_on|if|else|end|_jscript(_\w+)?)\s/i.test(info.value);
+			}
+		}))
 		.pipe(wrapper({
 			header: function(file) {
 				return "(function(f){typeof define===\"function\"?define(\"" + file.path.match(/([^\/\\]+)(\.\w+)$/)[1] + "\",f):f()})(function(require,exports,module){";
