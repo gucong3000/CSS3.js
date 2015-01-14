@@ -267,14 +267,14 @@
 		});
 	}
 
-	try {
-		styleNode = createElement("<style>" + styleRules + "</style>");
-	} catch (e) {
-		styleNode = createElement("style");
+	// 写样式表
+	styleNode = createElement("style");
+	head.insertBefore(styleNode, head.firstChild);
+	if(styleNode.styleSheet){
+		styleNode.styleSheet.cssText = styleRules;
+	} else {
 		styleNode.textContent = styleRules;
 	}
-
-	head.insertBefore(styleNode, head.firstChild);
 
 	try {
 		module.exports = createHolder;
