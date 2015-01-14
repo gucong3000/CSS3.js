@@ -1,7 +1,3 @@
-/**
- * @class h5form
- */
-
 (function(window, document, undefined) {
 
 	"use strict";
@@ -198,6 +194,7 @@
 				});
 
 			} catch (ex) {
+				// IE下事件注册
 				window.attachEvent("onresize", setDisplay);
 				input.attachEvent("onpropertychange", function() {
 					var propName = event.propName;
@@ -232,9 +229,11 @@
 		} else {
 			addEventListener(document, "DOMContentLoaded", init);
 		}
+
+		// 现代浏览器中使用定时器不断刷新页面上的placeholder效果
 		setInterval(init, 200);
 
-		//IE 10+、Safari中placeholder在文本框focus时则消失，这与其他浏览器有差异，用css干掉其原生的placeholder功能
+		// IE 10+、Safari中placeholder在文本框focus时则消失，这与其他浏览器有差异，用css干掉其原生的placeholder功能
 		forEach([":-ms-input-", "::-webkit-input-"], function(prefix) {
 			styleRules += prefix + strPlaceholder + "{color:transparent !important;}";
 		});
