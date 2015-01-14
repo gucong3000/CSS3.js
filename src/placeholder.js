@@ -279,7 +279,7 @@
 	try {
 		module.exports = createHolder;
 	} catch (e) {
-		window.placeholder = createHolder;
+		window[strPlaceholder] = createHolder;
 	}
 
 })(this, document);
