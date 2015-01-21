@@ -291,12 +291,14 @@
 	 * @function process
 	 */
 	function process() {
-		// Linked stylesheets
-		query("link[rel=\"stylesheet\"]").forEach(linkElement);
-		// Inline stylesheets
-		query("style").forEach(styleElement);
-		// Inline styles
-		query("[style]").forEach(styleAttribute);
+		if(fixers.length){
+			// Linked stylesheets
+			query("link[rel=\"stylesheet\"]").forEach(linkElement);
+			// Inline stylesheets
+			query("style").forEach(styleElement);
+			// Inline styles
+			query("[style]").forEach(styleAttribute);
+		}
 	}
 
 	/**

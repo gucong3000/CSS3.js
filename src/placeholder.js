@@ -224,6 +224,23 @@
 	}
 
 	try {
+		if (window.chrome || window.opera || window.netscape) {
+			if (!window.opera) {
+				try {
+					document.querySelector("::placeholder");
+				} catch (ex) {
+					strPlaceholder = "::-" + (window.netscape ? "moz" : "webkit-input") + "-$1";
+					require.async(["stylefix"], function(StyleFix) {
+						StyleFix.register(function(css, raw) {
+							if (raw) {
+								return css.replace(/::(placeholder)\b/g, strPlaceholder);
+							}
+						});
+					});
+				}
+			}
+			return;
+		}
 		if (/interactive|complete/.test(document.readyState)) {
 			init();
 		} else {
@@ -270,7 +287,7 @@
 	// 写样式表
 	styleNode = createElement("style");
 	head.insertBefore(styleNode, head.firstChild);
-	if(styleNode.styleSheet){
+	if (styleNode.styleSheet) {
 		styleNode.styleSheet.cssText = styleRules;
 	} else {
 		styleNode.textContent = styleRules;
