@@ -5,7 +5,7 @@
  */
 
 "use strict";
-/* global mOxie, ActiveXObject */
+/* global ActiveXObject */
 (function(window, undefined) {
 	var selectorEngines = {
 			"NW": "*.Dom.select",
@@ -82,9 +82,11 @@
 	function get(url, callback, error) {
 		cors = false;
 		var xhr,
+			mOxie,
 			process,
 			request,
 			response,
+			recursive,
 			rorigin = /^\w+:\/\/[^\/]+/;
 		error = error || noop;
 		// 优先使用缓存中的内容
@@ -101,7 +103,7 @@
 			requestCache[url] = [callback];
 
 			// 创建ajax对象
-			xhr = window.mOxie && !cors ? new mOxie.XMLHttpRequest() : (XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
+			xhr = XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
 					process();
@@ -134,9 +136,22 @@
 					xhr.onload = process;
 					xhr.open("GET", url);
 					xhr.send();
-				} else if (rorigin.test(url)) {
-					// 原版IE7与IE7下无XDomainRequest，尝试本地加载
-					get(url.replace(rorigin, ""), callback, error);
+				} else {
+					recursive = function(m) {
+						XMLHttpRequest = (mOxie || m).XMLHttpRequest;
+						get(url, callback, error);
+					};
+					if (mOxie = window.mOxie) {
+						recursive();
+					} else if (require) {
+						// 原版IE7与IE7以下下无XDomainRequest，尝试mOxie方式加载
+						require.async(["mOxie"], recursive);
+					} else if (rorigin.test(url)) {
+						// 原版IE7与IE7下无XDomainRequest，尝试本地加载
+						get(url.replace(rorigin, ""), callback, error);
+					} else {
+						error(xhr);
+					}
 				}
 			}
 		}
@@ -291,7 +306,7 @@
 	 * @function process
 	 */
 	function process() {
-		if(fixers.length){
+		if (fixers.length) {
 			// Linked stylesheets
 			query("link[rel=\"stylesheet\"]").forEach(linkElement);
 			// Inline stylesheets
@@ -335,10 +350,12 @@
 	 * @return {String} 修正后的css
 	 */
 	function init() {
-		ready.forEach(function(fn) {
-			fn();
+		contentLoaded(function() {
+			ready.forEach(function(fn) {
+				fn();
+			});
+			setTimeout(process, 0);
 		});
-		setTimeout(process, 0);
 	}
 
 	register(function(css) {
@@ -421,7 +438,12 @@
 		}
 	}
 
-	contentLoaded(init);
+	if (require && ![].filter) {
+		require.async(["es5-shim"], init);
+	} else {
+		init();
+	}
+
 
 	function isDocComplete() {
 		return /^(complete|interactive)$/.test(document.readyState);

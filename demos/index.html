@@ -11,30 +11,34 @@
 <script src="http://cdn.staticfile.org/html5shiv/3.7.2/html5shiv.min.js"></script>
 <![endif]-->
 <script src="http://cdn.staticfile.org/seajs/2.3.0/sea.js"></script>
-<script src="http://qil-dev.tff.com/script/moxie-swf.js"></script>
-<script src="../build/es5-shim.min.js"></script>
+<script src="../build/css3.js"></script>
 <script> 
-mOxie.Env.swf_url = 'http://qil-dev.tff.com/script/Moxie.cdn.swf';
-var ieVersion = document.querySelector ? document.documentMode : document.compatMode === "CSS1Compat" ? "XMLHttpRequest" in window ? 7 : 6 : 5;
-var jQueryPath = "http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js";
 seajs.config({
 	alias: {
-		"jquery": jQueryPath,
-		"mOxie": window.FileReader ? "" : "http://qil-dev.tff.com/script/moxie-swf.js",
-		"PIE": ieVersion < 9 ? "PIE_IE678.js" : (ieVersion < 11 ? "PIE_IE9.js" : jQueryPath)
+		jquery: "http://cdn.staticfile.org/jquery/1.11.0-rc1/jquery.min.js"
 	},
+	debug: true,
 	base: "../build/"
-});
-seajs.use(["jquery", "stylefix", "prefixfree", "selectivizr", "units", "props"], function(jQuery, StyleFix, PrefixFree) {
+}).use(["jquery", "stylefix", "prefixfree", "selectivizr", "cssunits", "cssprops"], function(jQuery, StyleFix, PrefixFree) {
+	stylefix = window.stylefix || StyleFix;
 	function ajaxtest(url) {
 		url = "http://dn-toursforfun.qbox.me/" + url;
-		console.log(url + "\tstart");
-		stylefix.get(url, function(text) {
-			console.log(url + "\tend");
-		});
+		if(window.console){
+			console.log(url + "\tstart");
+			stylefix.get(url, function(text) {
+				console.log(url + text);
+			});
+		} else {
+			alert(url + "\tstart");
+			stylefix.get(url, function(text) {
+				alert(url + text);
+			}, function(e){
+				alert(e);
+			});
+		}
 	}
-	// ajaxtest("js/base.js");
-	// ajaxtest("css/base.css");
+	ajaxtest("js/base.js");
+	ajaxtest("css/base.css");
  
 	function querytest(selector) {
 		console.log(selector);
@@ -42,8 +46,7 @@ seajs.use(["jquery", "stylefix", "prefixfree", "selectivizr", "units", "props"],
 			console.log(elem);
 		});
 	}
-	// querytest("html");
-	// StyleFix.load("http://qil-dev.tff.com/css/base.css");
+	querytest("html");
 });
 </script>
  

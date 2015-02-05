@@ -21,7 +21,7 @@ function compiler() {
 		jshint = require("gulp-jshint"),
 		uglify = require("gulp-uglify");
 
-	gulp.src("./src/**/*.js")
+	gulp.src(["./src/**/*.js"])
 		.pipe(plumber(errrHandler))
 		.pipe(jshint())
 		.pipe(jshint.reporter("fail"))
@@ -34,9 +34,17 @@ function compiler() {
 		}))
 		.pipe(wrapper({
 			header: function(file) {
+				if (/\bcss3.js$/.test(file.path)) {
+					return "";
+				}
 				return "(function(f){typeof define===\"function\"?define(\"" + file.path.match(/([^\/\\]+)(\.\w+)$/)[1] + "\",f):f()})(function(require,exports,module){";
 			},
-			footer: "});"
+			footer: function(file) {
+				if (/\bcss3.js$/.test(file.path)) {
+					return "";
+				}
+				return "});";
+			}
 		}))
 		.pipe(gulp.dest("./build/"));
 }
