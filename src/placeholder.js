@@ -94,7 +94,7 @@
 					//建立一个node
 					holder = createElement(strPlaceholder);
 					holder.onmousedown = function() {
-						//鼠标点holder是文本框获得焦点
+						//鼠标点holder时文本框获得焦点
 						setTimeout(function() {
 							input.focus();
 						}, 1);
@@ -222,81 +222,85 @@
 	function init() {
 		forEach(document.querySelectorAll("input,textarea"), createHolder);
 	}
-
-	try {
-		if (window.chrome || window.opera || window.netscape) {
-			if (!window.opera) {
-				try {
-					document.querySelector("::placeholder");
-				} catch (ex) {
-					strPlaceholder = "::-" + (window.netscape ? "moz" : "webkit-input") + "-$1";
-					require.async(["stylefix"], function(StyleFix) {
-						StyleFix.register(function(css, raw) {
-							if (raw) {
-								return css.replace(/::(placeholder)\b/g, strPlaceholder);
-							}
-						});
-					});
-				}
-			}
-			return;
-		}
-		if (/interactive|complete/.test(document.readyState)) {
-			init();
-		} else {
-			addEventListener(document, "DOMContentLoaded", init);
-		}
-
-		// 现代浏览器中使用定时器不断刷新页面上的placeholder效果
-		setInterval(init, 200);
-
-		// IE 10+、Safari中placeholder在文本框focus时则消失，这与其他浏览器有差异，用css干掉其原生的placeholder功能
-		forEach([":-ms-input-", "::-webkit-input-"], function(prefix) {
-			styleRules += prefix + strPlaceholder + "{color:transparent !important;}";
-		});
-
-		(function() {
-			var id = root.id;
-
-			function fn() {
-				root.removeEventListener(strDOMAttrModified, fn, false);
-				supportDOMAttrModified = true;
-			}
-
-			addEventListener(root, strDOMAttrModified, fn);
-			root.id = "mass"; //更新属性
-			root.id = id; //无论如何也还原它
-		})();
-	} catch (ex) {
-		(function(init) {
-			var $ = window.$;
-			if ($) {
-				init($);
+	if (window.opera) {
+		// 老版本Opera 12.1 及以前版本不做任何处理，因为无解决方案
+		return;
+	} else if (!("placeholder" in createElement("input")) || document.documentMode || +navigator.userAgent.replace(/.*(?:\bA\w+WebKit)\/?(\d+).*/i, "$1") < 536) {
+		// 老版本webkit浏览器、IE9+下兼容placeholder
+		try {
+			if (/interactive|complete/.test(document.readyState)) {
+				init();
 			} else {
-				require.async(["jquery"], init);
+				addEventListener(document, "DOMContentLoaded", init);
 			}
-		})(function($) {
-			$(function() {
-				$("input,textarea").each(function() {
-					createHolder(this);
+
+			// 现代浏览器中使用定时器不断刷新页面上的placeholder效果
+			setInterval(init, 200);
+
+			// IE 10+、Safari中placeholder在文本框focus时则消失，这与其他浏览器有差异，用css干掉其原生的placeholder功能
+			forEach([":-ms-input-", "::-webkit-input-"], function(prefix) {
+				styleRules += prefix + strPlaceholder + "{color:transparent !important;}";
+			});
+
+			(function() {
+				var id = root.id;
+
+				function fn() {
+					root.removeEventListener(strDOMAttrModified, fn, false);
+					supportDOMAttrModified = true;
+				}
+
+				addEventListener(root, strDOMAttrModified, fn);
+				root.id = "mass"; //更新属性
+				root.id = id; //无论如何也还原它
+			})();
+		} catch (ex) {
+			// IE6-8兼容placeholder，依赖jQuery
+			(function(init) {
+				var $ = window.$;
+				if ($) {
+					init($);
+				} else {
+					require.async(["jquery"], init);
+				}
+			})(function($) {
+				$(function() {
+					$("input,textarea").each(function() {
+						createHolder(this);
+					});
 				});
 			});
-		});
-	}
+		}
 
-	// 写样式表
-	styleNode = createElement("style");
-	head.insertBefore(styleNode, head.firstChild);
-	if (styleNode.styleSheet) {
-		styleNode.styleSheet.cssText = styleRules;
+		// 写样式表
+		styleNode = createElement("style");
+		head.insertBefore(styleNode, head.firstChild);
+		if (styleNode.styleSheet) {
+			styleNode.styleSheet.cssText = styleRules;
+		} else {
+			styleNode.textContent = styleRules;
+		}
+
+		try {
+			module.exports = createHolder;
+		} catch (e) {
+			window[strPlaceholder] = createHolder;
+		}
+
 	} else {
-		styleNode.textContent = styleRules;
-	}
-
-	try {
-		module.exports = createHolder;
-	} catch (e) {
-		window[strPlaceholder] = createHolder;
+		// 完美支持Placeholder效果的浏览器，检查需要前缀的，自动添加前缀
+		try {
+			document.querySelector("::placeholder");
+		} catch (ex) {
+			strPlaceholder = "::-" + (window.netscape ? "moz" : "webkit-input") + "-$1";
+			require.async(["stylefix"], function(StyleFix) {
+				StyleFix.register(function(css, raw) {
+					if (raw) {
+						return css.replace(/::(placeholder)\b/g, strPlaceholder);
+					}
+				});
+			});
+		}
 	}
 
 })(this, document);
