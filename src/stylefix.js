@@ -50,7 +50,7 @@
 	function query(expr, con) {
 		// 上下文对象
 		con = con || document;
-		var nodeList;
+		var nodeList = [];
 		// 遍历selectorEngines找到可用的外部DOM选择器
 		for (var engine in selectorEngines) {
 			var members, member, context = window;
@@ -69,7 +69,13 @@
 			}
 		}
 		// 返回外部DOM选择器找到的DOM或者使用querySelectorAll方法找到的DOM元素
-		return [].slice.call(nodeList || (con.querySelectorAll ? con.querySelectorAll(expr) : []), 0);
+		try {
+			nodeList = [].slice.call(nodeList || con.querySelectorAll(expr), 0);
+		} catch (ex) {
+
+		}
+
+		return nodeList;
 	}
 
 	/**

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<script src="http://cdn.staticfile.org/seajs/2.3.0/sea.js"></script>
+<script src="../build/css3.js"></script>
+<script> 
+seajs.config({
+	alias: {
+		jquery: "http://cdn.staticfile.org/jquery/1.11.0-rc1/jquery.min.js"
+	},
+	debug: true,
+	base: "../build/"
+}).use(["stylefix", "matchmedia"], function(jQuery, StyleFix, PrefixFree) {
+		var mql = window.matchMedia('screen and (color) and (orientation: landscape) and (min-width: 600px) and (min-height: 400px)');
+	console.log(mql);
+	/*
+		mql has the following properties:
+		matches         : <Boolean>
+		media           : <String>
+		addListener     : <Function>
+		removeListener  : <Function>
+	*/
+
+	window.matchMedia('screen and (min-width: 600px) and (min-height: 400px), screen and (min-height: 400px)')
+		.addListener(function(mql) {
+			console.log(mql.matches);
+		});
+});
+</script>
+</head>
+<body>
+</body>
+</html>

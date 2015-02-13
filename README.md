@@ -40,6 +40,16 @@ CSS3 polyfill
 
 ```javascript
 	require("matchmedia");
+	if (window.matchMedia("(min-width:480px)").matches) {
+		//view port至少480px宽度  
+	} else {
+		//view port比480px宽度小  
+	}
+	if (window.matchMedia("(max-msie:9)").matches) {
+		//IE6-9
+	} else {
+		//其他浏览器  
+	}
 ```
 
 > 基于[media-match](https://github.com/weblinc/media-match)
