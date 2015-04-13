@@ -7,7 +7,8 @@
 "use strict";
 /* global ActiveXObject */
 (function(window, undefined) {
-	var selectorEngines = {
+	var setTimeout = window.setTimeout,
+		selectorEngines = {
 			"NW": "*.Dom.select",
 			"MooTools": "$$",
 			"DOMAssistant": "*.$",
@@ -99,7 +100,7 @@
 		if (response = responseCache[url]) {
 			setTimeout(function() {
 				callback(response);
-			});
+			}, 0);
 			// 同一个url的并发请求优先使用缓存而非另外发请求
 		} else if (request = requestCache[url]) {
 			request.push(callback);
@@ -319,6 +320,8 @@
 			query("style").forEach(styleElement);
 			// Inline styles
 			query("[style]").forEach(styleAttribute);
+		} else {
+			setTimeout(process, 50);
 		}
 	}
 
