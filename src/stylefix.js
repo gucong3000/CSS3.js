@@ -18,17 +18,24 @@
 			"jQuery": "*",
 			"dojo": "*.query"
 		},
+		fixers = [
+			// 删除css中的注释
+			function(css) {
+				return css.replace(/(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*?/g, "");
+			}
+		],
 		document = window.document,
 		XDomainRequest = window.XDomainRequest,
 		XMLHttpRequest = window.XMLHttpRequest,
 		ieVersion = document.querySelector ? document.documentMode : document.compatMode === "CSS1Compat" ? "XMLHttpRequest" in window ? 7 : 6 : 5,
 		cors = document.querySelector || XDomainRequest,
+		attrIgnoreName = "data-ignore",
 		// 缓存已经ajax获取的内容
 		responseCache = {},
 		// 缓存ajax请求
 		requestCache = {},
 		ready = [],
-		fixers = [],
+		inProcess,
 		self;
 
 	/**
@@ -200,6 +207,7 @@
 			base_scheme = (/^[a-z]{3,10}:/.exec(base) || [""])[0],
 			base_domain = (/^[a-z]{3,10}:\/\/[^\/]+/.exec(base) || [""])[0],
 			base_query = /^([^?]*)\??/.exec(url)[1],
+			style = opt.style || document.createElement("style"),
 			callback = opt.callback,
 			before = opt.before;
 		get(url, function(css) {
@@ -230,7 +238,7 @@
 			// base should be escaped before added to RegExp (Issue #81)
 			var escaped_base = base.replace(/([\\\^\$*+[\]?{}.=!:(|)])/g, "\\$1");
 			css = css.replace(new RegExp("\\b(behavior:\\s*?url\\('?\"?)" + escaped_base, "gi"), "$1");
-			var style = document.createElement("style");
+			inProcess = style;
 			style.setAttribute("data-href", url);
 			if (before && before.parentNode) {
 				// 如果设置了插入位置，则插入该位置之后
@@ -244,6 +252,7 @@
 			if (callback) {
 				callback(style);
 			}
+			inProcess = null;
 		}, function() {
 			if (!before) {
 				var link = document.createElement("link");
@@ -260,18 +269,49 @@
 	 * @param {HTMLLinkElement} link 需要修正css样式的link元素
 	 */
 	function linkElement(link) {
-		if (link["data-ignore"]) {
-			return;
+		var opts = {
+				callback: function(style) {
+					style.media = link.media;
+					style.disabled = link.disabled;
+					opts.style = style;
+				},
+				before: link
+			},
+			timer;
+
+		// ajax下载css内容，写入页面
+		function downCss() {
+			var url = link.href,
+				style = opts.style,
+				hasParent = link.parentNode;
+			if (style && (!hasParent || style.getAttribute("data-href") !== url)) {
+				if (style.remove) {
+					style.remove();
+				} else if (style.parentNode) {
+					style.parentNode.removeChild(style);
+				}
+			}
+			if (hasParent) {
+				load(url, opts);
+			}
 		}
 
-		link["data-ignore"] = true;
-		load(link.href, {
-			callback: function(style) {
-				style.media = link.media;
-				style.disabled = link.disabled;
-			},
-			before: link
-		});
+		// 延迟方式调用downCss函数
+		function downCssLazy() {
+			clearTimeout(timer);
+			timer = setTimeout(downCss, 0);
+		}
+
+		if (!link[attrIgnoreName] && /^stylesheet$/i.test(link.rel)) {
+
+			downCss();
+			addEventListener(link, "DOMAttrModified", downCssLazy);
+			addEventListener(link, "DOMNodeRemoved", downCssLazy);
+
+			if (link.attachEvent) {
+				link.attachEvent("onpropertychange", downCssLazy);
+			}
+		}
 	}
 
 	/**
@@ -313,13 +353,35 @@
 	 * @function process
 	 */
 	function process() {
-		if (fixers.length) {
+		if (fixers.length > 1) {
 			// Linked stylesheets
 			query("link[rel=\"stylesheet\"]").forEach(linkElement);
 			// Inline stylesheets
 			query("style").forEach(styleElement);
 			// Inline styles
 			query("[style]").forEach(styleAttribute);
+
+			addEventListener(document, "DOMNodeInserted", function(e) {
+				var target = e.target;
+
+				switch (target.tagName) {
+					case "STYLE":
+						if (target !== inProcess) {
+							styleElement(target);
+						}
+						break;
+					case "LINK":
+						if (/^stylesheet$/i.test(target.rel)) {
+							linkElement(target);
+						}
+						break;
+					default:
+						if (target.style) {
+							styleAttribute(target);
+						}
+				}
+			});
+
 		} else {
 			setTimeout(process, 50);
 		}
@@ -367,9 +429,20 @@
 		});
 	}
 
-	register(function(css) {
-		return css.replace(/(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*?/g, "");
-	});
+	/**
+	 * @description DOM元素事件注册
+	 * @param {Element} element 要注册事假的DOM元素，可以是文档上的元素,  document 本身, window, 或者 XMLHttpRequest.
+	 * @type {String} 表示所监听事件的类型的一个字符串。
+	 * @listener {Function} 当指定的事件类型发生时被通知到的一个对象。该参数必是实现EventListener接口的一个对象或函数。
+	 * @[useCapture] {Booleon} 如果值为true， useCapture 表示用户希望发起捕获。 在发起捕获之后， 只要Dom子树下发生了该事件类型，都会先被派发到该注册监听器，然后再被派发到Dom子树中的注册监听器中。并且向上冒泡的事件不会触发那些发起捕获的事件监听器。进一步的解释可以查看 DOM Level 3 Events 文档。 请注意该参数并不是在所有的浏览器版本中都是可选的。如果没有指定， useCapture 默认为false 。
+	 */
+	function addEventListener(element) {
+		var fnAddEventListener = element.addEventListener;
+		if (fnAddEventListener) {
+			fnAddEventListener.apply(element, [].slice.call(arguments, 1));
+			return true;
+		}
+	}
 
 	/*!
 	 * ContentLoaded.js by Diego Perini, modified for IE<9 only (to save space)
@@ -407,12 +480,9 @@
 			setTimeout(completed, 0);
 
 			// Standards-based browsers support DOMContentLoaded
-		} else if (document.addEventListener) {
-			// Use the handy event callback
-			document.addEventListener("DOMContentLoaded", completed, false);
+		} else if (!addEventListener(document, "DOMContentLoaded", completed)) {
 
 			// If IE event model is used
-		} else {
 			// Ensure firing before onload, maybe late but safe also for iframes
 			document.attachEvent("onreadystatechange", function() {
 				if (isDocComplete()) {

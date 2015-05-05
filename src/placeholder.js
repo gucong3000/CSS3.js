@@ -1,4 +1,4 @@
-(function(window, document, undefined) {
+(function(window, document) {
 
 	"use strict";
 
@@ -67,8 +67,15 @@
 		}
 	}
 
-	function addEventListener(node, type, listener, useCapture) {
-		node.addEventListener(type, listener, !!useCapture);
+	/**
+	 * @description DOM元素事件注册
+	 * @param {Element} element 要注册事假的DOM元素，可以是文档上的元素,  document 本身, window, 或者 XMLHttpRequest.
+	 * @type {String} 表示所监听事件的类型的一个字符串。
+	 * @listener {Function} 当指定的事件类型发生时被通知到的一个对象。该参数必是实现EventListener接口的一个对象或函数。
+	 * @[useCapture] {Booleon} 如果值为true， useCapture 表示用户希望发起捕获。 在发起捕获之后， 只要Dom子树下发生了该事件类型，都会先被派发到该注册监听器，然后再被派发到Dom子树中的注册监听器中。并且向上冒泡的事件不会触发那些发起捕获的事件监听器。进一步的解释可以查看 DOM Level 3 Events 文档。 请注意该参数并不是在所有的浏览器版本中都是可选的。如果没有指定， useCapture 默认为false 。
+	 */
+	function addEventListener(element, type, listener, useCapture) {
+		element.addEventListener(type, listener, !!useCapture);
 	}
 
 	/**
