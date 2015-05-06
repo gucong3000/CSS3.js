@@ -31,5 +31,10 @@
 	width: 3em;
 }
 label {
+	text-align: center;
+	position: fixed;
+	width: 100%;
+	top: 50px;
+	left: 0;
 	zoom: 1;
 }

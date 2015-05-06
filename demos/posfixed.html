@@ -9,9 +9,6 @@
 <![endif]-->
 <script src="http://cdn.staticfile.org/seajs/2.3.0/sea.js"></script>
 <script src="../build/css3.js"></script>
-<script src="../build/stylefix.js"></script>
-<script src="../build/cssprops.js"></script>
-
 <script> 
 seajs.config({
 	alias: {
@@ -19,7 +16,7 @@ seajs.config({
 	},
 	debug: true,
 	base: "../build/"
-}).use(["jquery", "cssprops"], function() {
+}).use(["jquery", "posfixed"], function() {
 	jQuery(function($){
 		$(":checkbox").change(function(e){
 			$("div").toggleClass('fixed', e.target.checked);
@@ -29,6 +26,11 @@ seajs.config({
 </script>
 </head>
 <body>
+<hr style="width: 5000px;">
+<label>
+	<input type="checkbox">
+	fixed
+</label>
 <div class="postl">
 	tl	
 </div>
@@ -52,20 +54,6 @@ seajs.config({
 2<br>
 2<br>
 2<br>
-<hr style="width: 5000px;">
-<label>
-	<input type="checkbox">
-	fixed
-</label>
-
-2<br>
-2<br>
-2<br>
-2<br>
-2<br>
-2<br>
-2<br>
-
 2<br>
 2<br>
 2<br>
@@ -82,7 +70,6 @@ seajs.config({
 2<br>
 2<br>
 2<br>
-2<br>2<br>
 2<br>
 2<br>
 2<br>
@@ -98,7 +85,17 @@ seajs.config({
 2<br>
 2<br>
 2<br>
-2<br>2<br>
+2<br>
+2<br>
+2<br>
+2<br>
+2<br>
+2<br>
+2<br>
+2<br>
+2<br>
+2<br>
+2<br>
 2<br>
 2<br>
 2<br>
