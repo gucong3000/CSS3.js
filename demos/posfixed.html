@@ -2,42 +2,15 @@
 <html>
 <head>
 <title></title>
-<style type="text/css">
-.postl,
-.postr {
-	top: 0;
-}
-.posbl,
-.posbr {
-	bottom: 0;
-}
-.postl,
-.posbl {
-	left: 0;
-}
-.postr,
-.posbr {
-	right: 0;
-}
-.fixed {
-	position: fixed;
-}
-.postl,
-.postr,
-.posbl,
-.posbr {
-	text-align: center;
-	line-height: 3em;
-	background: #ccc;
-	width: 3em;
-	margin: 1em;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="css/posfixed.css">
 <!--[if lt IE 9]>
 <script src="http://cdn.staticfile.org/es5-shim/4.0.3/es5-shim.min.js"></script>
 <![endif]-->
 <script src="http://cdn.staticfile.org/seajs/2.3.0/sea.js"></script>
 <script src="../build/css3.js"></script>
+<script src="../build/stylefix.js"></script>
+<script src="../build/cssprops.js"></script>
+
 <script> 
 seajs.config({
 	alias: {
@@ -67,6 +40,7 @@ seajs.config({
 <div class="posbr">
 	br
 </div>
+<div style="width: 200%;"></div>
 2<br>
 2<br>
 2<br>

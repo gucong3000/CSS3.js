@@ -9,7 +9,7 @@
 		domPatches = {},
 		replace = [];
 
-	function attach(element) {
+	function attachPie(element) {
 		var uniqueID = element.uniqueID;
 		if (!attachCache[uniqueID]) {
 			try {
@@ -64,13 +64,13 @@
 					// position: fixed; >>> position: absolute;
 					replace.push([
 						//用正则匹配到position：fixed代码段
-						/^(position)\s*:\s*(\w+)/i,
+						/^(position)\s*:\s*(\w+)([\};]|$)/i,
 						//替换IE的css表达式，并且传入逻辑处理的函数
-						"$1:expression(seajs.require(\"stylefix\")(this, \"$1\", \"$2\"))"
+						"$1:expression(seajs.require(\"cssprops\")(this,\"$1\",\"$2\"))$3"
 					]);
 					replace.push([
-						/^(left|top|right|bottom)\s*:\s*([^\s\;\{\}]+)/i,
-						"$1:expression(seajs.require(\"stylefix\")(this, \"$1\", \"$2\"))"
+						/^(left|top|right|bottom)\s*:\s*([\d\.+]*\w*)([\};]|$)/i,
+						"$1:expression(seajs.require(\"cssprops\")(this,\"$1\",\"$2\"))$3"
 					]);
 					properties.push("-pie-png-fix");
 				}
@@ -82,7 +82,7 @@
 			// css样式内容替换
 			if (replace.length) {
 				// 将所有css属性拆解
-				css = css.replace(/\b[\w\-]+\s*:[^{};]+([\};]|$)/g, function(prop) {
+				css = css.replace(/\b[\w\-]+\s*:[^\{\};]+([\};]|$)/g, function(prop) {
 					// 将单条css属性hack
 					replace.forEach(function(rep) {
 						prop = prop.replace(rep[0], rep[1]);
@@ -96,11 +96,11 @@
 				if (raw) {
 					// 注册需要应用PIE的css选择符
 					props.forEach(function(raw) {
-						domPatches[raw.replace(/^\s+/, "").replace(/\s*{[\s\S]*$/, "").replace(/[\s\t\r\n]+/g, " ")] = {};
+						domPatches[raw.replace(/^\s+/, "").replace(/\s*{[\s\S]*$/, "").replace(/[\s\t\r\n]+/g, " ")] = attachPie;
 					});
 				} else {
 					// 将DOM元素应用PIE
-					attach(element);
+					attachPie(element);
 				}
 			}
 			return css;
@@ -109,7 +109,7 @@
 			setInterval(function() {
 				// 遍历已注册的需要应用PIE的css的选择器，查找到DOM元素应用PIE
 				for (var i in domPatches) {
-					StyleFix.query(i).forEach(attach);
+					StyleFix.query(i).forEach(domPatches[i]);
 				}
 			}, 250);
 		});
@@ -120,7 +120,8 @@
 		// uniqueID：IE的特有属性，表示dom唯一标识
 		var uniqueID = element.uniqueID,
 			// cssCache
-			cssCache = cssValCache[uniqueID];
+			cssCache = cssValCache[uniqueID],
+			returnValue;
 
 
 		// 转化为小写
@@ -129,13 +130,8 @@
 
 		// 第一次运行函数时，cssCache不存在，将以下值缓存
 		if (!cssCache) {
-			cssValCache[uniqueID] = cssCache = {
-				left: "auto",
-				top: "auto",
-				right: "auto",
-				bottom: "auto"
-			};
-		};
+			cssValCache[uniqueID] = cssCache = {};
+		}
 
 		if (propName === "position" && propVlaue === "fixed") {
 			var left = parseInt(cssCache.left),
@@ -143,23 +139,16 @@
 				right = parseInt(cssCache.right),
 				bottom = parseInt(cssCache.bottom),
 				html = document.documentElement;
-
-			cssCache.fixedleft = isNaN(left) ? (isNaN(right) ? "auto" : html.scrollLeft + html.clientWidth - (element.offsetWidth + parseInt(cssCache.right))) : html.scrollLeft + parseInt(cssCache.left);
+			cssCache.fixedleft = isNaN(left) ? (isNaN(right) ? cssCache.left : html.scrollLeft + html.clientWidth - element.offsetHeight - right) : html.scrollLeft + left;
 			cssCache.fixedright = "auto";
-			cssCache.fixedtop = isNaN(top) ? (isNaN(bottom) ? "auto" : html.scrolltop + html.clientHeight - (element.offsetHeight + parseInt(cssCache.bottom))) : html.scrollTop + parseInt(cssCache.top);
-			cssCache.fixedbottom = "auto"
+			cssCache.fixedtop = isNaN(top) ? (isNaN(bottom) ? cssCache.top : html.scrollTop + html.clientHeight - element.offsetHeight - right) : html.scrollTop + top;;
+			cssCache.fixedbottom = "auto";
 
 			returnValue = "absolute";
 
 		} else if (cssCache.position === "fixed") {
 			returnValue = cssCache["fixed" + propName];
 		}
-		// 	return returnValue
-		// } else if (propName === "left" || "right") {
-		// 	return css.fixedleft
-		// } else if (propName === "top" || "bottom") {
-		// 	return css.fixedtop
-		// }
 
 		cssCache[propName] = propVlaue;
 		return returnValue || propVlaue;
