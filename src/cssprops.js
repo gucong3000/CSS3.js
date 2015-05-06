@@ -139,9 +139,7 @@
 
 		// 第一次运行函数时，cssCache不存在，将以下值缓存
 		if (!cssCache) {
-			cssValCache[uniqueID] = cssCache = {
-				aaa: 0
-			};
+			cssValCache[uniqueID] = cssCache = {};
 		}
 
 		if (propName === "position" && propVlaue === "fixed") {
@@ -155,13 +153,6 @@
 			cssCache.fixedbottom = "auto";
 
 			returnValue = "absolute";
-			if (cssCache.aaa < 10) {
-				console.log(JSON.stringify(cssCache, null, "\t"));
-				cssCache.aaa++;
-
-			}
-
-
 		} else if (cssCache.position === "fixed") {
 			returnValue = cssCache["fixed" + propName];
 		}
