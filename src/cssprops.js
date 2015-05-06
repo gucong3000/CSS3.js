@@ -4,6 +4,7 @@
 	var StyleFix = window.stylefix || require("stylefix"),
 		ieVersion = StyleFix.ieVersion,
 		properties = ieVersion < 9 ? ["border-radius", "box-shadow"] : [],
+		html = document.documentElement,
 		cssValCache = {},
 		attachCache = {},
 		domPatches = {},
@@ -73,6 +74,14 @@
 						"$1:expression(seajs.require(\"cssprops\")(this,\"$1\",\"$2\"))$3"
 					]);
 					properties.push("-pie-png-fix");
+
+					var bgImg = html.currentStyle.backgroundImage,
+						style = html.style;
+					if (bgImg == "none" || bgImg == "url(about:blank)") {
+						style.backgroundImage = "url(about:blank)";
+						style.backgroundRepeat = "no-repeat";
+						style.backgroundAttachment = "fixed";
+					}
 				}
 			}
 		}
@@ -130,21 +139,28 @@
 
 		// 第一次运行函数时，cssCache不存在，将以下值缓存
 		if (!cssCache) {
-			cssValCache[uniqueID] = cssCache = {};
+			cssValCache[uniqueID] = cssCache = {
+				aaa: 0
+			};
 		}
 
 		if (propName === "position" && propVlaue === "fixed") {
 			var left = parseInt(cssCache.left),
 				top = parseInt(cssCache.top),
 				right = parseInt(cssCache.right),
-				bottom = parseInt(cssCache.bottom),
-				html = document.documentElement;
-			cssCache.fixedleft = isNaN(left) ? (isNaN(right) ? cssCache.left : html.scrollLeft + html.clientWidth - element.offsetHeight - right) : html.scrollLeft + left;
+				bottom = parseInt(cssCache.bottom);
+			cssCache.fixedleft = isNaN(left) ? (isNaN(right) ? cssCache.left : html.scrollLeft + html.clientWidth - element.offsetWidth - right) : html.scrollLeft + left;
 			cssCache.fixedright = "auto";
-			cssCache.fixedtop = isNaN(top) ? (isNaN(bottom) ? cssCache.top : html.scrollTop + html.clientHeight - element.offsetHeight - right) : html.scrollTop + top;;
+			cssCache.fixedtop = isNaN(top) ? (isNaN(bottom) ? cssCache.top : html.scrollTop + html.clientHeight - element.offsetHeight - bottom) : html.scrollTop + top;
 			cssCache.fixedbottom = "auto";
 
 			returnValue = "absolute";
+			if (cssCache.aaa < 10) {
+				console.log(JSON.stringify(cssCache, null, "\t"));
+				cssCache.aaa++;
+
+			}
+
 
 		} else if (cssCache.position === "fixed") {
 			returnValue = cssCache["fixed" + propName];

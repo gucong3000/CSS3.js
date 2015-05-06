@@ -1,18 +1,22 @@
 .postl,
 .postr {
-	top: 0;
+	bottom: auto;
+	top: 50px;
 }
 .posbl,
 .posbr {
-	bottom: 0;
+	bottom: 50px;
+	top: auto;
 }
 .postl,
 .posbl {
-	left: 0;
+	right: auto;
+	left: 50px;
 }
 .postr,
 .posbr {
-	right: 0;
+	right: 50px;
+	left: auto;
 }
 .fixed {
 	position: fixed;
@@ -25,5 +29,7 @@
 	line-height: 3em;
 	background: #ccc;
 	width: 3em;
-	margin: 1em;
+}
+label {
+	zoom: 1;
 }
