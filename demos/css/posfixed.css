@@ -1,22 +1,18 @@
 .postl,
 .postr {
-	bottom: auto;
 	top: 50px;
 }
 .posbl,
 .posbr {
 	bottom: 50px;
-	top: auto;
 }
 .postl,
 .posbl {
-	right: auto;
 	left: 50px;
 }
 .postr,
 .posbr {
 	right: 50px;
-	left: auto;
 }
 .fixed {
 	position: fixed;
@@ -33,8 +29,19 @@
 label {
 	text-align: center;
 	position: fixed;
+	display: block;
 	width: 100%;
 	top: 50px;
 	left: 0;
 	zoom: 1;
+}
+hr {
+	border: 10px dashed #000;
+	width: 5000px;
+}
+.test {
+	background: red;
+	position: fixed;
+	left: 500px;
+	top: 500px;
 }
