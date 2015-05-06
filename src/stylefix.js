@@ -209,7 +209,7 @@
 			base_query = /^([^?]*)\??/.exec(url)[1],
 			style = opt.style || document.createElement("style"),
 			callback = opt.callback,
-			before = opt.before;
+			after = opt.after;
 		get(url, function(css) {
 			// Convert relative URLs to absolute, if needed
 			if (base) {
@@ -240,9 +240,9 @@
 			css = css.replace(new RegExp("\\b(behavior:\\s*?url\\('?\"?)" + escaped_base, "gi"), "$1");
 			inProcess = style;
 			style.setAttribute("data-href", url);
-			if (before && before.parentNode) {
+			if (after && after.parentNode) {
 				// 如果设置了插入位置，则插入该位置之后
-				before.parentNode.insertBefore(style, before);
+				after.parentNode.insertBefore(style, after.nextSibling);
 			} else {
 				// 如果为设置插入位置，则插入head
 				document.documentElement.childNodes[0].appendChild(style);
@@ -254,7 +254,7 @@
 			}
 			inProcess = null;
 		}, function() {
-			if (!before) {
+			if (!after) {
 				var link = document.createElement("link");
 				link.rel = "stylesheet";
 				link.href = url;
@@ -275,7 +275,7 @@
 					style.disabled = link.disabled;
 					opts.style = style;
 				},
-				before: link
+				after: link
 			},
 			timer;
 

@@ -4,6 +4,7 @@
 	var StyleFix = window.stylefix || require("stylefix"),
 		ieVersion = StyleFix.ieVersion,
 		properties = ieVersion < 9 ? ["border-radius", "box-shadow"] : [],
+		cssValCache = {},
 		attachCache = {},
 		domPatches = {},
 		replace = [];
@@ -62,8 +63,14 @@
 				if (ieVersion < 7) {
 					// position: fixed; >>> position: absolute;
 					replace.push([
-						/^(position\s*:\s*)fixed\b/i,
-						"$1absolute"
+						//用正则匹配到position：fixed代码段
+						/^(position)\s*:\s*(\w+)/i,
+						//替换IE的css表达式，并且传入逻辑处理的函数
+						"$1:expression(seajs.require(\"stylefix\")(this, \"$1\", \"$2\"))"
+					]);
+					replace.push([
+						/^(left|top|right|bottom)\s*:\s*([^\s\;\{\}]+)/i,
+						"$1:expression(seajs.require(\"stylefix\")(this, \"$1\", \"$2\"))"
 					]);
 					properties.push("-pie-png-fix");
 				}
@@ -108,4 +115,53 @@
 		});
 	}
 
+	//暴露出的接口
+	module.exports = function(element, propName, propVlaue) {
+		// uniqueID：IE的特有属性，表示dom唯一标识
+		var uniqueID = element.uniqueID,
+			// cssCache
+			cssCache = cssValCache[uniqueID];
+
+
+		// 转化为小写
+		propName = propName.toLowerCase();
+		propVlaue = propVlaue.toLowerCase();
+
+		// 第一次运行函数时，cssCache不存在，将以下值缓存
+		if (!cssCache) {
+			cssValCache[uniqueID] = cssCache = {
+				left: "auto",
+				top: "auto",
+				right: "auto",
+				bottom: "auto"
+			};
+		};
+
+		if (propName === "position" && propVlaue === "fixed") {
+			var left = parseInt(cssCache.left),
+				top = parseInt(cssCache.top),
+				right = parseInt(cssCache.right),
+				bottom = parseInt(cssCache.bottom),
+				html = document.documentElement;
+
+			cssCache.fixedleft = isNaN(left) ? (isNaN(right) ? "auto" : html.scrollLeft + html.clientWidth - (element.offsetWidth + parseInt(cssCache.right))) : html.scrollLeft + parseInt(cssCache.left);
+			cssCache.fixedright = "auto";
+			cssCache.fixedtop = isNaN(top) ? (isNaN(bottom) ? "auto" : html.scrolltop + html.clientHeight - (element.offsetHeight + parseInt(cssCache.bottom))) : html.scrollTop + parseInt(cssCache.top);
+			cssCache.fixedbottom = "auto"
+
+			returnValue = "absolute";
+
+		} else if (cssCache.position === "fixed") {
+			returnValue = cssCache["fixed" + propName];
+		}
+		// 	return returnValue
+		// } else if (propName === "left" || "right") {
+		// 	return css.fixedleft
+		// } else if (propName === "top" || "bottom") {
+		// 	return css.fixedtop
+		// }
+
+		cssCache[propName] = propVlaue;
+		return returnValue || propVlaue;
+	};
 })(window);
