@@ -9,7 +9,15 @@ CSS3 polyfill
 - IE9下自动屏蔽 与css3冲突的滤镜(Alpha|Matrix|Gradient|FlipH|FlipV)
 - IE9下transform属性免前缀
 - IE6、7下兼容 `display : inline-block;`
-- IE6下兼容 `position: fixed;`
+- 
+
+```javascript
+	require("cssprops");
+```
+
+### IE6下兼容 `position: fixed;`
+
+- 暂时只兼容left、top，right、bottom取值的单位为px的情形，其他单位的兼容正在开发中
 
 ```javascript
 	require("cssprops");
