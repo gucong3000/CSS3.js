@@ -1,20 +1,19 @@
 "use strict";
 (function(window) {
 
-	var expression = express() + "$3",
+	var expression = express("$1", "$2") + "$3",
 		StyleFix = window.stylefix || require("stylefix"),
 		cssprops = window.cssprops || require("cssprops"),
 		document = window.document,
 		html = document.documentElement,
-		fixedhelper = "fixedhelper_" + document.uniqueID,
+		fixedhelper = "fixed_helper_" + document.uniqueID,
 		head = html.childNodes[0],
 		ieVersion = StyleFix.ieVersion,
 		cssValCache = {},
 		style;
 
 	function express(propName, propVlaue) {
-		propName = propName || "$1";
-		propVlaue = propVlaue || "$2";
+		propVlaue = propVlaue || "auto";
 		return propName + ":expression(seajs.require(\"posfixed\")(this,\"" + propName + "\",\"" + propVlaue + "\"))";
 	}
 
@@ -30,23 +29,34 @@
 		propName = propName.toLowerCase();
 		propVlaue = propVlaue.toLowerCase();
 
-		// 第一次运行函数时，cssCache不存在，将以下值缓存
+		// 第一次运行函数时，cssCache不存在，将建立新缓存
 		if (!cssCache) {
 			cssValCache[uniqueID] = cssCache = {};
+			cssCache.fixedright = cssCache.fixedbottom = "auto";
 		}
+
+		cssCache[propName] = propVlaue;
 
 		if (propName === "position") {
 			if (propVlaue === "fixed") {
-				if (!cssCache.fixedright) {
-					element.className += " " + fixedhelper;
-					cssCache.fixedright = cssCache.fixedbottom = "auto";
+				if (cssCache.fixed) {
+					var left = parseInt(cssCache.left),
+						top = parseInt(cssCache.top),
+						right = parseInt(cssCache.right),
+						bottom = parseInt(cssCache.bottom);
+
+					cssCache.fixedleft = isNaN(left) ? (isNaN(right) ? cssCache.left : html.scrollLeft + html.clientWidth - element.offsetWidth - right) : html.scrollLeft + left;
+					cssCache.fixedtop = isNaN(top) ? (isNaN(bottom) ? cssCache.top : html.scrollTop + html.clientHeight - element.offsetHeight - bottom) : html.scrollTop + top;
+
+				} else {
+					setTimeout(function() {
+						if (!(cssCache.top && cssCache.left)) {
+							element.className += " " + fixedhelper;
+						}
+					}, 1);
+
+					cssCache.fixed = true;
 				}
-				var left = parseInt(cssCache.left),
-					top = parseInt(cssCache.top),
-					right = parseInt(cssCache.right),
-					bottom = parseInt(cssCache.bottom);
-				cssCache.fixedleft = isNaN(left) ? (isNaN(right) ? cssCache.left : html.scrollLeft + html.clientWidth - element.offsetWidth - right) : html.scrollLeft + left;
-				cssCache.fixedtop = isNaN(top) ? (isNaN(bottom) ? cssCache.top : html.scrollTop + html.clientHeight - element.offsetHeight - bottom) : html.scrollTop + top;
 
 				returnValue = "absolute";
 			}
@@ -54,7 +64,6 @@
 			returnValue = cssCache["fixed" + propName];
 		}
 
-		cssCache[propName] = propVlaue;
 		return returnValue || propVlaue;
 	}
 
@@ -75,7 +84,7 @@
 		StyleFix.ready(function() {
 			style = document.createElement("style");
 			head.insertBefore(style, head.firstChild);
-			StyleFix.cssContent(style, "html,body{background: url(about:blank) no-repeat fixed}." + fixedhelper + "{" + express("top", "auto") + ";" + express("left", "auto") + ";" + express("right", "auto") + ";" + express("bottom", "auto") + "}");
+			StyleFix.cssContent(style, "html{background: url(about:blank) no-repeat fixed}." + fixedhelper + "{" + express("top") + ";" + express("left") + "}");
 		});
 
 
