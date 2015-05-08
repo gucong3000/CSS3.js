@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>supports demo</title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="css/supports.css">
+</head>
+<body>
+	<div class="test">
+		<h2 class="supports">如果你的浏览器支持@supports，这行字会是绿色</h2>
+		<pre>
+@supports (display: block) {
+    /* 如果支持display: block,则下面指定的CSS会生效 */
+    .supports {
+    	color: green;
+    }
+}
+		</pre>
+		
+		<h2 class="supports-or">检测是否支持指定的CSS属性或者其带前缀版本</h2>
+
+		<pre>
+@supports ( (-ms-transform: rotate(7deg)) or (-webkit-transform: rotate(7deg)) 
+or (transform: rotate(7deg)) or (-o-transform: rotate(7deg)) ) {
+    … /* 如果支持不带前缀以及带前缀的transform属性,则下面指定的CSS会生效 */
+    .supports-or {
+		-webkit-transform: rotate(7deg);
+		-ms-transform: rotate(7deg);
+		-o-transform: rotate(7deg);
+		transform: rotate(7deg);
+	}
+}
+		</pre>
+		
+		
+		<h2 class="supports-not">检测是否不支持指定的CSS属性</h2>
+		<div class="fixed"></div>
+		<pre>
+@supports ( not ((position: fixed)){
+    … /* 如果不支持position: fixed */
+    position: absolute;
+}
+		</pre>
+	</div>
+</body>
+</html>

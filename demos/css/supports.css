@@ -1,0 +1,33 @@
+.test {
+	width: 600px;
+	margin: 80px auto;
+}
+.supports {
+	color: red;
+}
+@supports (display: block) {
+	.supports {
+		color: green;
+	}
+}
+@supports ( (-ms-transform: rotate(7deg)) or (-webkit-transform: rotate(7deg)) or (transform: rotate(7deg)) or (-o-transform: rotate(7deg)) ) {
+	.supports-or {
+		-webkit-transform: rotate(7deg);
+		-ms-transform: rotate(7deg);
+		-o-transform: rotate(7deg);
+		transform: rotate(7deg);
+	}
+}
+.fixed {
+	width: 100px;
+	height: 100px;
+	position: fixed;
+	left: 0;
+	top: 0;
+	background-color: red;
+}
+@supports (not(position: fixed)) {
+	.fixed {
+		position: absolute;
+	}
+}
