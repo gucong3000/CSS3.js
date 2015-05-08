@@ -41,7 +41,7 @@ CSS3 polyfill
 	require("selectivizr");
 ```
 
-## 媒体查询 Media Queries
+## 媒体查询 @media
 
 - 为IE提响应式媒体查询css语句的支持
 
@@ -59,7 +59,32 @@ CSS3 polyfill
 	}
 ```
 
+```CSS
+	@media screen and (min-width: 960px) {
+		body{ background: #999; }
+	}
+```
+
 > 基于[media-match](https://github.com/weblinc/media-match)
+
+## 兼容性查询 @supports
+
+```javascript
+	require("supports");
+	CSS.supports("display", "flex");
+```
+
+```CSS
+	@supports ( display: flexbox ) {  
+		body, #navigation, #content { display: flexbox; }  
+		#navigation { background: blue; color: white; }  
+		#article { background: white; color: black; }  
+	} 
+```
+
+上面的规则表示，当浏览器支持弹性盒子布局时，括号里的所有样式将会生效
+
+基于[CSS.supports](https://github.com/termi/CSS.supports)
 
 ## 长度单位兼容
 

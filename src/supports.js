@@ -11,7 +11,7 @@
 /*
 TODO::
 1. element.style.webkitProperty == element.style.WebkitProperty in Webkit (Chrome at least), so
-CSS.supporst("webkit-animation", "name") is true. Think this is wrong.
+CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 */
 
 (function() {
@@ -376,12 +376,18 @@ CSS.supporst("webkit-animation", "name") is true. Think this is wrong.
 	(global.stylefix || require("stylefix")).register(function(css, raw) {
 		if (raw) {
 			return css.replace(/@supports\s+([^\{]+)/g, function(str, strRules) {
-				return _supportsCondition(strRules) ? "@media all " : str;
+				try {
+					if (strRules && _supportsCondition(strRules)) {
+						str = "@media all ";
+					}
+				} catch (ex) {
+
+				}
+				return str;
 			});
 		}
 	});
 
 	global = testElement = null; // no need this any more
-
 
 })();

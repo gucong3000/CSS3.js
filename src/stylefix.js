@@ -78,12 +78,14 @@
 		}
 		// 返回外部DOM选择器找到的DOM或者使用querySelectorAll方法找到的DOM元素
 		try {
-			nodeList = [].slice.call(nodeList || con.querySelectorAll(expr), 0);
+			nodeList = nodeList && nodeList.length ? nodeList : con.querySelectorAll(expr);
 		} catch (ex) {
-
+			if (/^\w+$/.test(expr)) {
+				con.getElementsByTagName(expr);
+			}
 		}
 
-		return nodeList;
+		return [].slice.call(nodeList, 0);
 	}
 
 	/**
@@ -355,7 +357,7 @@
 	function process() {
 		if (fixers.length > 1) {
 			// Linked stylesheets
-			query("link[rel=\"stylesheet\"]").forEach(linkElement);
+			query("link").forEach(linkElement);
 			// Inline stylesheets
 			query("style").forEach(styleElement);
 			// Inline styles
