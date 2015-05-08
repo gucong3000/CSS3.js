@@ -1,22 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
- 
 <meta charset="utf-8">
-<title>Prefix free: Break free from CSS vendor prefix hell!</title>
 <link rel="stylesheet" href="css/style.css" />
 <link rel="stylesheet" href="css/print.css" media="print" />
 <link rel="shortcut icon" href="img/favicon.png" />
-<!--[if lt IE 9]>
-<script src="http://cdn.staticfile.org/es5-shim/4.0.3/es5-shim.min.js"></script>
-<![endif]-->
 <script src="http://cdn.staticfile.org/seajs/2.3.0/sea.js"></script>
 <script src="../build/css3.js"></script>
-<script> 
+<script>
 seajs.config({
-	alias: {
-		jquery: "http://cdn.staticfile.org/jquery/1.11.0-rc1/jquery.min.js"
-	},
 	debug: true,
 	base: "../build/"
 }).use(["jquery", "stylefix", "prefixfree", "selectivizr", "cssunits", "cssprops"], function(jQuery, StyleFix, PrefixFree) {

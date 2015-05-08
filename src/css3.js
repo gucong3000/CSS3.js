@@ -16,6 +16,7 @@
 			supports: window.CSS ? core : "supports",
 			cssprops: msie < 11 ? "cssprops" : core,
 			posfixed: msie < 7 ? "posfixed" : core,
+			jquery: "jquery-1.11.2.min.js",
 			"es5-shim": "es5-shim.min",
 			cssunits: "cssunits",
 			stylefix: core
