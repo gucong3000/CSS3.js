@@ -135,12 +135,12 @@ CSS.supporst("webkit-animation", "name") is true. Think this is wrong.
 
 			return prevResultsCache[name_and_value] = result;
 		}.bind(
-			/(-)([a-z])/g // __bind__RE_FIRST_LETTER
-			,
+			/(-)([a-z])/g, // __bind__RE_FIRST_LETTER
 			function(a, b, c) { // ToCamel_replacer
 				return c.toUpperCase();
-			}, testElement.style // testStyle
-			, msie ? testElement : null // testElement
+			},
+			testElement.style, // testStyle
+			msie ? testElement : null // testElement
 		);
 	}
 
