@@ -13,6 +13,7 @@
 			matchmedia: window.matchMedia ? core : "matchmedia",
 			mOxie: window.FileReader ? core : "moxie.js",
 			prefixfree: msie < 9 ? core : "prefixfree",
+			supports: window.CSS ? core : "supports",
 			cssprops: msie < 11 ? "cssprops" : core,
 			posfixed: msie < 7 ? "posfixed" : core,
 			"es5-shim": "es5-shim.min",
