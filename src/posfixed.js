@@ -14,7 +14,7 @@
 
 	function express(propName, propVlaue) {
 		propVlaue = propVlaue || "auto";
-		return propName + ":expression(seajs.require(\"posfixed\")(this,\"" + propName + "\",\"" + propVlaue + "\"))";
+		return propName + ":expression((window.posfixed || seajs.require)(\"posfixed\")(this,\"" + propName + "\",\"" + propVlaue + "\"))";
 	}
 
 	function posfixed(element, propName, propVlaue) {

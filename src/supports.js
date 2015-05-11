@@ -124,6 +124,9 @@ CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 						result = testElement.currentStyle[propertyName_CC] === propertyValue;
 						document.documentElement.removeChild(testElement);
 					}
+				} else if (testStyle.setProperty && testStyle.getPropertyValue) {
+					testStyle.setProperty(propertyName, propertyValue);
+					result = testStyle.getPropertyValue(propertyName) != null;
 				} else {
 					testStyle.cssText = propertyName + ":" + propertyValue;
 					result = testStyle[propertyName_CC];
@@ -133,7 +136,7 @@ CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 
 			testStyle.cssText = "";
 
-			return prevResultsCache[name_and_value] = result;
+			return prevResultsCache[name_and_value] = !!result;
 		}.bind(
 			/(-)([a-z])/g, // __bind__RE_FIRST_LETTER
 			function(a, b, c) { // ToCamel_replacer
@@ -146,217 +149,23 @@ CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 
 	// _supportsCondition("(a:b) or (display:block) or (display:none) and (display:block1)")
 	function _supportsCondition(str) {
-		if (!str) {
-			_supportsCondition.throwSyntaxError();
-		}
+		var result;
+		if (str) {
+			try {
+				str = str.replace(/[\s\r\n\t]+/g, " ").replace(/\bnot\b/ig, "!").replace(/\band\b/ig, "&&").replace(/\bor\b/ig, "||").replace(/\(([\w\-]+)\s*:\s*(([^\(\):]+(\([^\(\):]+\))*)+)\s*\)/g, function(s, propertyName, propertyValue) {
+					return (propertyName && propertyValue) ? _CSS_supports(propertyName, propertyValue) : s;
+				});
 
-		/** @enum {number} @const */
-		var RMAP = {
-			NOT: 1,
-			AND: 2,
-			OR: 4,
-			PROPERTY: 8,
-			VALUE: 16,
-			GROUP_START: 32,
-			GROUP_END: 64
-		};
-
-		var resultsStack = [],
-			chr, result, valid = true,
-			isNot, start, currentPropertyName, expectedPropertyValue, passThisGroup, nextRuleCanBe =
-			RMAP.NOT | RMAP.GROUP_START | RMAP.PROPERTY,
-			currentRule, i = -1,
-			newI, len = str.length;
-
-		resultsStack.push(void 0);
-
-		function _getResult() {
-			var l = resultsStack.length - 1;
-			if (l < 0) {
-				valid = false;
-			}
-			return resultsStack[l];
-		}
-
-		/**
-		 * @param {string=} val
-		 * @private
-		 */
-		function _setResult(val) {
-			var l = resultsStack.length - 1;
-			if (l < 0) {
-				valid = false;
-			}
-			result = resultsStack[l] = val;
-		}
-
-		/**
-		 * @param {string?} that
-		 * @param {string?} notThat
-		 * @param {number=} __i
-		 * @param {boolean=} cssValue
-		 * @return {(number|undefined)}
-		 * @private
-		 */
-		function _checkNext(that, notThat, __i, cssValue) {
-			newI = __i || i;
-
-			var chr, isQuited, isUrl, special;
-
-			if (cssValue) {
-				newI--;
-			}
-
-			do {
-				chr = str.charAt(++newI);
-
-				if (cssValue) {
-					special = chr && (isQuited || isUrl);
-					if (chr === "'" || chr === "\"") {
-						special = (isQuited = !isQuited);
-					} else if (!isQuited) {
-						if (!isUrl && chr === "(") {
-							// TODO:: in Chrome: $0.style.background = "url('http://asd))')"; $0.style.background == "url(http://asd%29%29/)"
-							isUrl = true;
-							special = true;
-						} else if (isUrl && chr === ")") {
-							isUrl = false;
-							special = true;
-						}
-					}
+				result = eval.call({}, str);
+				if (typeof result === "boolean") {
+					return result;
 				}
-			}
-			while (special || (chr && (!that || chr !== that) && (!notThat || chr === notThat)));
+			} catch (ex) {
 
-			if (that == null || chr === that) {
-				return newI;
 			}
 		}
-
-		while (++i < len) {
-			if (currentRule === RMAP.NOT) {
-				nextRuleCanBe = RMAP.GROUP_START | RMAP.PROPERTY;
-			} else if (currentRule === RMAP.AND || currentRule === RMAP.OR || currentRule === RMAP.GROUP_START) {
-				nextRuleCanBe = RMAP.GROUP_START | RMAP.PROPERTY | RMAP.NOT;
-			} else if (currentRule === RMAP.GROUP_END) {
-				nextRuleCanBe = RMAP.GROUP_START | RMAP.NOT | RMAP.OR | RMAP.AND;
-			} else if (currentRule === RMAP.VALUE) {
-				nextRuleCanBe = RMAP.GROUP_END | RMAP.GROUP_START | RMAP.NOT | RMAP.OR | RMAP.AND;
-			} else if (currentRule === RMAP.PROPERTY) {
-				nextRuleCanBe = RMAP.VALUE;
-			}
-
-			chr = str.charAt(i);
-
-			if (nextRuleCanBe & RMAP.NOT && chr === "n" && str.substr(i, 3) === "not") {
-				currentRule = RMAP.NOT;
-				i += 2;
-			} else if (nextRuleCanBe & RMAP.AND && chr === "a" && str.substr(i, 3) === "and") {
-				currentRule = RMAP.AND;
-				i += 2;
-			} else if (nextRuleCanBe & RMAP.OR && chr === "o" && str.substr(i, 2) === "or") {
-				currentRule = RMAP.OR;
-				i++;
-			} else if (nextRuleCanBe & RMAP.GROUP_START && chr === "(" && _checkNext("(", " ")) {
-				currentRule = RMAP.GROUP_START;
-				i = newI - 1;
-			} else if (nextRuleCanBe & RMAP.GROUP_END && chr === ")" && resultsStack.length > 1) {
-				currentRule = RMAP.GROUP_END;
-			} else if (nextRuleCanBe & RMAP.PROPERTY && chr === "(" && (start = _checkNext(null, " ")) && _checkNext(":", null, start)) {
-				currentRule = RMAP.PROPERTY;
-				i = newI - 1;
-				currentPropertyName = str.substr(start, i - start + 1).trim();
-				start = 0;
-				expectedPropertyValue = null;
-				continue;
-			} else if (nextRuleCanBe & RMAP.VALUE && (start = _checkNext(null, " ")) && _checkNext(")", null, start, true)) {
-				currentRule = RMAP.VALUE;
-				i = newI;
-				expectedPropertyValue = str.substr(start, i - start).trim();
-				start = 0;
-				chr = " ";
-			} else if (chr === " ") {
-				continue;
-			} else {
-				currentRule = 0;
-			}
-
-			if (!valid || !chr || !(currentRule & nextRuleCanBe)) {
-				_supportsCondition.throwSyntaxError();
-			}
-			valid = true;
-
-			if (currentRule === RMAP.OR) {
-				if (result === false) {
-					_setResult();
-					passThisGroup = false;
-				} else if (result === true) {
-					passThisGroup = true;
-				}
-
-				continue;
-			}
-
-			if (passThisGroup) {
-				continue;
-			}
-
-			result = _getResult();
-
-			if (currentRule === RMAP.NOT) {
-				isNot = true;
-
-				continue;
-			}
-
-			if (currentRule === RMAP.AND) {
-				if (result === false) {
-					passThisGroup = true;
-				} else {
-					_setResult();
-				}
-
-				continue;
-			}
-
-			if (result === false && !(currentRule & (RMAP.GROUP_END | RMAP.GROUP_START))) {
-				_setResult(result);
-				continue;
-			}
-
-			if (currentRule === RMAP.GROUP_START) { // Group start
-				resultsStack.push(void 0);
-			} else if (currentRule === RMAP.GROUP_END) { // Group end
-				passThisGroup = false;
-
-				resultsStack.pop();
-				if (_getResult() !== void 0) {
-					result = !!(result & _getResult());
-				}
-
-				isNot = false;
-			} else if (currentRule === RMAP.VALUE) { // Property value
-				_setResult(_CSS_supports(currentPropertyName, expectedPropertyValue));
-				if (isNot) {
-					result = !result;
-				}
-
-				isNot = false;
-				expectedPropertyValue = currentPropertyName = null;
-			}
-
-			_setResult(result);
-		}
-
-		if (!valid || result === void 0 || resultsStack.length > 1) {
-			_supportsCondition.throwSyntaxError();
-		}
-
-		return result;
-	}
-	_supportsCondition.throwSyntaxError = function() {
 		throw new Error("SYNTAX_ERR");
-	};
+	}
 
 	/**
 	 * @expose

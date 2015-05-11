@@ -5,12 +5,12 @@
 .supports {
 	color: red;
 }
-@supports (display: block) {
+@supports (display:block) {
 	.supports {
 		color: green;
 	}
 }
-@supports ( (-ms-transform: rotate(7deg)) or (-webkit-transform: rotate(7deg)) or (transform: rotate(7deg)) or (-o-transform: rotate(7deg)) ) {
+@supports ((-ms-transform:rotate(7deg)) or (-webkit-transform:rotate(7deg)) or (transform:rotate(7deg)) or (-o-transform:rotate(7deg))) {
 	.supports-or {
 		-webkit-transform: rotate(7deg);
 		-ms-transform: rotate(7deg);
@@ -26,8 +26,9 @@
 	top: 0;
 	background-color: red;
 }
-@supports (not(position: fixed)) {
+@supports (not(position:fixed)) {
 	.fixed {
+		background-color: green;
 		position: absolute;
 	}
 }
