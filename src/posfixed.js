@@ -1,16 +1,21 @@
 "use strict";
-(function(window) {
+(function(window, StyleFix, cssprops) {
 
 	var expression = express("$1", "$2") + "$3",
-		StyleFix = window.stylefix || require("stylefix"),
-		cssprops = window.cssprops || require("cssprops"),
 		document = window.document,
 		html = document.documentElement,
 		fixedhelper = "fixed_helper_" + document.uniqueID,
-		head = html.childNodes[0],
 		ieVersion = StyleFix.ieVersion,
+		isNaN = window.isNaN,
 		cssValCache = {},
-		style;
+		absUnits = {
+			cm: 2.54,
+			mm: 25.4,
+			q: 101.6,
+			pt: 72,
+			pc: 6,
+			"in": 1
+		};
 
 	function express(propName, propVlaue) {
 		propVlaue = propVlaue || "auto";
@@ -24,6 +29,36 @@
 			cssCache = cssValCache[uniqueID],
 			returnValue;
 
+		// 将长度+单位的字符串数据，转为Number
+		function parseLength(propVlaue, isWidth) {
+			var value,
+				unit;
+			if (propVlaue && (propVlaue = propVlaue.match(/^([\d\.]+)(.*)$/))) {
+				value = parseFloat(propVlaue[1]);
+				unit = propVlaue[2];
+
+				if (unit && unit !== "px") {
+					if (unit === "%") {
+						value *= html[isWidth ? "offsetWidth" : "offsetHeight"] / 100;
+					} else if (unit && absUnits[unit]) {
+						// 如果是绝对长度单位，根据dpi换算
+						value *= 72 / absUnits[unit];
+					} else if (unit === "rem" && element !== html) {
+						value *= parseLength(html.currentStyle.fontSize);
+					} else if (unit === "em") {
+						value *= parseLength(element.currentStyle.fontSize);
+					}
+				}
+			} else {
+				value = NaN;
+			}
+			return value;
+		}
+
+		// 将长度+单位的字符串数据，转为Int
+		function length2Int(propVlaue, isWidth) {
+			return Math.round(parseLength(propVlaue, isWidth));
+		}
 
 		// 转化为小写
 		propName = propName.toLowerCase();
@@ -40,10 +75,10 @@
 		if (propName === "position") {
 			if (propVlaue === "fixed") {
 				if (cssCache.fixed) {
-					var left = parseInt(cssCache.left),
-						top = parseInt(cssCache.top),
-						right = parseInt(cssCache.right),
-						bottom = parseInt(cssCache.bottom);
+					var left = parseLength(cssCache.left, true),
+						top = parseLength(cssCache.top),
+						right = parseLength(cssCache.right, true),
+						bottom = parseLength(cssCache.bottom);
 
 					cssCache.fixedleft = isNaN(left) ? (isNaN(right) ? cssCache.left : html.scrollLeft + html.clientWidth - element.offsetWidth - right) : html.scrollLeft + left;
 					cssCache.fixedtop = isNaN(top) ? (isNaN(bottom) ? cssCache.top : html.scrollTop + html.clientHeight - element.offsetHeight - bottom) : html.scrollTop + top;
@@ -77,7 +112,7 @@
 			expression
 		]);
 		cssprops.push([
-			/^(left|top|right|bottom)\s*:\s*([\d\.+]*\w*)([\};]|$)/i,
+			/^(left|top|right|bottom)\s*:\s*([\d\.]+[\w\%]*)([\s\}\/;]|$)/i,
 			expression
 		]);
 
@@ -93,4 +128,4 @@
 			StyleFix.addRestCss("html{background: url(about:blank) no-repeat fixed}." + fixedhelper + "{" + express("top") + ";" + express("left") + "}");
 		});
 	}
-})(window);
+})(window, window.stylefix || require("stylefix"), window.cssprops || require("cssprops"));
