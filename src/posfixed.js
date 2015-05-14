@@ -81,18 +81,16 @@
 			expression
 		]);
 
-		StyleFix.ready(function() {
-			style = document.createElement("style");
-			head.insertBefore(style, head.firstChild);
-			StyleFix.cssContent(style, "html{background: url(about:blank) no-repeat fixed}." + fixedhelper + "{" + express("top") + ";" + express("left") + "}");
-		});
-
-
 		//暴露出的接口
 		try {
 			module.exports = posfixed;
 		} catch (e) {
 			window.posfixed = posfixed;
 		}
+
+		// 向文档中写入css
+		StyleFix.ready(function() {
+			StyleFix.addRestCss("html{background: url(about:blank) no-repeat fixed}." + fixedhelper + "{" + express("top") + ";" + express("left") + "}");
+		});
 	}
 })(window);

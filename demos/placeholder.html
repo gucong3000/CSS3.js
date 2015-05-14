@@ -1,0 +1,242 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>placeholder demo</title>
+<script src="http://cdn.staticfile.org/seajs/2.3.0/sea.js"></script>
+<script src="../build/css3.js"></script>
+<script>
+seajs.config({
+	debug: true,
+	base: "../build/"
+}).use(["placeholder"], function() {
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">H5F Test Suite</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<form id="fixture">
+		<fieldset>
+			<legend>Your details</legend>
+			
+			<ol>
+				<li>
+					<label for="fullname">Name *</label> 
+					<input type="text" name="fullname" placeholder="Full name" autofocus required>
+				</li>
+				<li>
+					<label for="email">Email *</label> 
+					<input type="email" name="email" placeholder="e.g. ryan@example.net" title="Please enter a valid email" required>
+				</li>
+				<li>
+					<label for="url">Website *</label> 
+					<input type="url" name="url" required>
+				</li>
+				<li>
+					<label for="tel">Phone *</label> 
+					<input type="tel" name="tel" pattern="\d{10}" placeholder="Please enter a ten digit phone number" required>
+				</li>
+				<li>
+					<label for="date">Date *</label> 
+					<input type="date" name="date" required>
+				</li>
+				<li>
+					<label for="nickname">Nick name</label> 
+					<input type="text" name="nickname" pattern="\w{4,}" placeholder="A nickname that is atleast four characters">
+				</li>
+				<li>
+					<label for="password">Password</label> 
+					<input type="password" name="password" pattern="\w{4,}" placeholder="A password that is atleast four characters" required>
+				</li>
+				<li>
+					<label for="postcode">Post code *</label>
+					<input name="postcode" type="number" min="1001" step="2" max="8000" required>
+				</li>
+				<li>
+					<label for="other">Other</label> 
+					<input type="text" name="other" placeholder="Other information">
+				</li>
+				<li>
+					<label for="disabled">Other</label> 
+					<input type="text" name="disabled" required disabled placeholder="Other information">
+				</li>
+				<li>
+					<label for="gen">Generic</label> 
+					<input type="text" name="gen" placeholder="Other information">
+				</li>
+				<li>
+					<label for="gen">Checkbox</label> 
+					<input type="checkbox" required name="chkbox">
+				</li>
+				<li>
+					<label for="female">Female</label>
+					<input type="radio" name="gender" value="female" required>
+				</li>
+				<li>
+					<label for="male">Male</label>
+					<input type="radio" name="gender" value="male" required>
+				</li>
+				<li>
+					<label for="select">Select *</label>
+					<select name="select" required>
+						<option value="">0</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+					</select>
+				</li>
+				<li>
+					<label for="textarea">textarea *</label>
+					<textarea placeholder="textarea" required></textarea>
+				</li>
+								<li style="position: relative;">
+					<label for="fullname">Name *</label> 
+					<input type="text" name="fullname" placeholder="Full name" autofocus required>
+				</li>
+				<li style="position: relative;">
+					<label for="email">Email *</label> 
+					<input type="email" name="email" placeholder="e.g. ryan@example.net" title="Please enter a valid email" required>
+				</li>
+				<li style="position: relative;">
+					<label for="url">Website *</label> 
+					<input type="url" name="url" required>
+				</li>
+				<li style="position: relative;">
+					<label for="tel">Phone *</label> 
+					<input type="tel" name="tel" pattern="\d{10}" placeholder="Please enter a ten digit phone number" required>
+				</li>
+				<li style="position: relative;">
+					<label for="date">Date *</label> 
+					<input type="date" name="date" required>
+				</li>
+				<li style="position: relative;">
+					<label for="nickname">Nick name</label> 
+					<input type="text" name="nickname" pattern="\w{4,}" placeholder="A nickname that is atleast four characters">
+				</li>
+				<li style="position: relative;">
+					<label for="password">Password</label> 
+					<input type="password" name="password" pattern="\w{4,}" placeholder="A password that is atleast four characters" required>
+				</li>
+				<li style="position: relative;">
+					<label for="postcode">Post code *</label>
+					<input name="postcode" type="number" min="1001" step="2" max="8000" required>
+				</li>
+				<li style="position: relative;">
+					<label for="other">Other</label> 
+					<input type="text" name="other" placeholder="Other information">
+				</li>
+				<li style="position: relative;">
+					<label for="disabled">Other</label> 
+					<input type="text" name="disabled" required disabled placeholder="Other information">
+				</li>
+				<li style="position: relative;">
+					<label for="gen">Generic</label> 
+					<input type="text" name="gen" placeholder="Other information">
+				</li>
+				<li style="position: relative;">
+					<label for="gen">Checkbox</label> 
+					<input type="checkbox" required name="chkbox">
+				</li>
+				<li style="position: relative;">
+					<label for="female">Female</label>
+					<input type="radio" name="gender" value="female" required>
+				</li>
+				<li style="position: relative;">
+					<label for="male">Male</label>
+					<input type="radio" name="gender" value="male" required>
+				</li>
+				<li style="position: relative;">
+					<label for="select">Select *</label>
+					<select name="select" required>
+						<option value="">0</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+					</select>
+				</li>
+				<li style="position: relative;">
+					<label for="textarea">textarea *</label>
+					<textarea placeholder="textarea" required></textarea>
+				</li>
+				<li>
+					<label for="email">Email *</label> 
+					<input style="text-align: right;" type="email" name="email" placeholder="e.g. ryan@example.net" title="Please enter a valid email" required>
+				</li>
+				<li>
+					<label for="url">Website *</label> 
+					<input style="text-align: right;" type="url" name="url" required>
+				</li>
+				<li>
+					<label for="tel">Phone *</label> 
+					<input style="text-align: right;" type="tel" name="tel" pattern="\d{10}" placeholder="Please enter a ten digit phone number" required>
+				</li>
+				<li>
+					<label for="date">Date *</label> 
+					<input style="text-align: right;" type="date" name="date" required>
+				</li>
+				<li>
+					<label for="nickname">Nick name</label> 
+					<input style="text-align: right;" type="text" name="nickname" pattern="\w{4,}" placeholder="A nickname that is atleast four characters">
+				</li>
+				<li>
+					<label for="password">Password</label> 
+					<input style="text-align: right;" type="password" name="password" pattern="\w{4,}" placeholder="A password that is atleast four characters" required>
+				</li>
+				<li>
+					<label for="postcode">Post code *</label>
+					<input style="text-align: right;" name="postcode" type="number" min="1001" step="2" max="8000" required>
+				</li>
+				<li>
+					<label for="other">Other</label> 
+					<input style="text-align: right;" type="text" name="other" placeholder="Other information">
+				</li>
+				<li>
+					<label for="disabled">Other</label> 
+					<input style="text-align: right;" type="text" name="disabled" required disabled placeholder="Other information">
+				</li>
+				<li>
+					<label for="gen">Generic</label> 
+					<input style="text-align: right;" type="text" name="gen" placeholder="Other information">
+				</li>
+				<li>
+					<label for="gen">Checkbox</label> 
+					<input style="text-align: right;" type="checkbox" required name="chkbox">
+				</li>
+				<li>
+					<label for="female">Female</label>
+					<input style="text-align: right;" type="radio" name="gender" value="female" required>
+				</li>
+				<li>
+					<label for="male">Male</label>
+					<input style="text-align: right;" type="radio" name="gender" value="male" required>
+				</li>
+				<li>
+					<label for="select">Select *</label>
+					<select style="text-align: right;" name="select" required>
+						<option value="">0</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+					</select>
+				</li>
+				<li>
+					<label for="textarea">textarea *</label>
+					<textarea style="text-align: right;" placeholder="textarea" required></textarea>
+				</li>
+				<li>
+					<input id="input_submit" type="submit" value="submit">
+					<input id="input_submit_novalidate" type="submit" value="formnovalidate" formnovalidate>
+					<button id="button_submit_novalidate" type="submit" formnovalidate>button tag</button>
+				</li>
+			</ol>
+		</fieldset>
+	</form>
+</body>
+</html>

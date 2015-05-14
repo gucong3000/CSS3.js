@@ -5,16 +5,15 @@
 	var strPlaceholder = "placeholder",
 		styleRules = strPlaceholder + "{position:absolute;cursor:text;color:gray;padding:0;border:0;overflow:hidden;-ms-user-select:none;user-select:none;pointer-events:none;}textarea{overflow: auto;}",
 		attrName = "data-" + strPlaceholder + new Date().getTime() + Math.random(),
+		StyleFix = window.stylefix || require("stylefix"),
 		strDOMAttrModified = "DOMAttrModified",
 		root = document.documentElement,
-		head = root.children[0],
 		parseInt = window.parseInt,
 		supportDOMAttrModified,
 		placeholderCache = {},
 		strNormal = "normal",
 		strStatic = "static",
 		strPx = "px",
-		styleNode,
 		getComputedStyle = window.getComputedStyle ? function(node) {
 			return window.getComputedStyle(node, null);
 		} : 0;
@@ -245,9 +244,7 @@
 			setInterval(init, 200);
 
 			// IE 10+、Safari中placeholder在文本框focus时则消失，这与其他浏览器有差异，用css干掉其原生的placeholder功能
-			forEach([":-ms-input-", "::-webkit-input-"], function(prefix) {
-				styleRules += prefix + strPlaceholder + "{color:transparent !important;}";
-			});
+			styleRules += (document.documentMode ? ":-ms-input-" : "::-webkit-input-") + strPlaceholder + "{color:transparent !important;}";
 
 			(function() {
 				var id = root.id;
@@ -262,31 +259,16 @@
 				root.id = id; //无论如何也还原它
 			})();
 		} catch (ex) {
-			// IE6-8兼容placeholder，依赖jQuery
-			(function(init) {
-				var $ = window.$;
-				if ($) {
-					init($);
-				} else {
-					require.async(["jquery"], init);
-				}
-			})(function($) {
-				$(function() {
-					$("input,textarea").each(function() {
-						createHolder(this);
-					});
+			// IE6-8兼容placeholder初始化
+			StyleFix.ready(function() {
+				forEach(["input", "textarea"], function(tagName) {
+					forEach(document.getElementsByTagName(tagName), createHolder);
 				});
 			});
 		}
 
 		// 写样式表
-		styleNode = createElement("style");
-		head.insertBefore(styleNode, head.firstChild);
-		if (styleNode.styleSheet) {
-			styleNode.styleSheet.cssText = styleRules;
-		} else {
-			styleNode.textContent = styleRules;
-		}
+		StyleFix.addRestCss(styleRules);
 
 		try {
 			module.exports = createHolder;
@@ -300,14 +282,11 @@
 			document.querySelector("::placeholder");
 		} catch (ex) {
 			strPlaceholder = "::-" + (window.netscape ? "moz" : "webkit-input") + "-$1";
-			require.async(["stylefix"], function(StyleFix) {
-				StyleFix.register(function(css, raw) {
-					if (raw) {
-						return css.replace(/::(placeholder)\b/g, strPlaceholder);
-					}
-				});
+			StyleFix.register(function(css, raw) {
+				if (raw) {
+					return css.replace(/::(placeholder)\b/g, strPlaceholder);
+				}
 			});
 		}
 	}
-
 })(this, document);

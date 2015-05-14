@@ -25,6 +25,7 @@
 			}
 		],
 		document = window.document,
+		head = document.documentElement.children[0],
 		XDomainRequest = window.XDomainRequest,
 		XMLHttpRequest = window.XMLHttpRequest,
 		ieVersion = document.querySelector ? document.documentMode : document.compatMode === "CSS1Compat" ? "XMLHttpRequest" in window ? 7 : 6 : 5,
@@ -35,6 +36,7 @@
 		// 缓存ajax请求
 		requestCache = {},
 		ready = [],
+		restStyle,
 		inProcess,
 		self;
 
@@ -446,6 +448,21 @@
 		}
 	}
 
+	function addRestCss(cssText) {
+		if (!restStyle) {
+			restStyle = document.createElement("style");
+		}
+		inProcess = restStyle;
+		head.insertBefore(restStyle, head.firstChild);
+
+		if (restStyle.styleSheet) {
+			restStyle.styleSheet.cssText += cssText;
+		} else {
+			restStyle.textContent += cssText;
+		}
+		inProcess = null;
+	}
+
 	/*!
 	 * ContentLoaded.js by Diego Perini, modified for IE<9 only (to save space)
 	 *
@@ -525,7 +542,6 @@
 		init();
 	}
 
-
 	function isDocComplete() {
 		return /^(complete|interactive)$/.test(document.readyState);
 	}
@@ -535,6 +551,7 @@
 		get: get,
 		cssContent: cssContent,
 		load: load,
+		addRestCss: addRestCss,
 		linkElement: linkElement,
 		styleElement: styleElement,
 		styleAttribute: styleAttribute,
