@@ -30,7 +30,7 @@
 		XMLHttpRequest = window.XMLHttpRequest,
 		ieVersion = document.querySelector ? document.documentMode : document.compatMode === "CSS1Compat" ? "XMLHttpRequest" in window ? 7 : 6 : 5,
 		cors = document.querySelector || XDomainRequest,
-		attrIgnoreName = "data-ignore",
+		attrStyleNodeName = "data-style",
 		// 缓存已经ajax获取的内容
 		responseCache = {},
 		// 缓存ajax请求
@@ -277,7 +277,7 @@
 				callback: function(style) {
 					style.media = link.media;
 					style.disabled = link.disabled;
-					opts.style = style;
+					link[attrStyleNodeName] = opts.style = style;
 				},
 				after: link
 			},
@@ -296,6 +296,14 @@
 				}
 			}
 			if (hasParent) {
+				if (!style) {
+					// 防止重复加载造成页面上有多个<style>标签
+					style = link[attrStyleNodeName];
+					if (!style || !style.parentNode) {
+						query("style[data-href=\"" + url + "\"]")[0];
+					}
+					opts.style = style;
+				}
 				load(url, opts);
 			}
 		}
@@ -306,7 +314,7 @@
 			timer = setTimeout(downCss, 0);
 		}
 
-		if (!link[attrIgnoreName] && /^stylesheet$/i.test(link.rel)) {
+		if (/^stylesheet$/i.test(link.rel)) {
 
 			downCss();
 			addEventListener(link, "DOMAttrModified", downCssLazy);
@@ -324,9 +332,11 @@
 	 * @param {HTMLStyleElement} style 需要修正css样式的style元素
 	 */
 	function styleElement(style) {
-		var disabled = style.disabled;
-		cssContent(style, fix(cssContent(style), true, style));
-		style.disabled = disabled;
+		if (!style.getAttribute("data-href")) {
+			var disabled = style.disabled;
+			cssContent(style, fix(cssContent(style), true, style));
+			style.disabled = disabled;
+		}
 	}
 
 	/**
