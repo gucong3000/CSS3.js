@@ -5,6 +5,7 @@
 	var core = "stylefix";
 	var msie = document.querySelector ? document.documentMode : ("XMLHttpRequest" in window ? 7 : 6);
 	seajs.config({
+		debug: true,
 		// 别名配置
 		alias: {
 			placeholder: (!("placeholder" in document.createElement("input")) || msie || +navigator.userAgent.replace(/.*(?:\bA\w+WebKit)\/?(\d+).*/i, "$1") < 536) ? "placeholder" : core,
