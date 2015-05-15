@@ -19,7 +19,7 @@ CSS3 polyfill
 - 暂时只兼容left、top，right、bottom取值的单位为px的情形，其他单位的兼容正在开发中
 
 ```javascript
-	require("cssprops");
+	require("posfixed");
 ```
 
 ## css3 免私有前缀(`-webkit-`、`-moz-`等)
