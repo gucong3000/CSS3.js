@@ -75,13 +75,24 @@
 		if (propName === "position") {
 			if (propVlaue === "fixed") {
 				if (cssCache.fixed) {
-					var left = parseLength(cssCache.left, true),
-						top = parseLength(cssCache.top),
-						right = parseLength(cssCache.right, true),
-						bottom = parseLength(cssCache.bottom);
+					var left = length2Int(cssCache.left, true),
+						top = length2Int(cssCache.top),
+						right = length2Int(cssCache.right, true),
+						bottom = length2Int(cssCache.bottom),
+						body = document.body,
+						offsetParent = element.offsetParent,
+						scrollTop = html.scrollTop || body.scrollTop,
+						scrollLeft = html.scrollLeft || body.scrollLeft;
 
-					cssCache.fixedleft = isNaN(left) ? (isNaN(right) ? cssCache.left : html.scrollLeft + html.clientWidth - element.offsetWidth - right) : html.scrollLeft + left;
-					cssCache.fixedtop = isNaN(top) ? (isNaN(bottom) ? cssCache.top : html.scrollTop + html.clientHeight - element.offsetHeight - bottom) : html.scrollTop + top;
+					// 修正父定位对象（offsetParent）不为文档根节点时，与其他浏览器的位置差异
+					while (offsetParent && offsetParent !== html) {
+						scrollTop -= offsetParent.offsetTop;
+						scrollLeft -= offsetParent.offsetLeft;
+						offsetParent = offsetParent.offsetParent;
+					}
+
+					cssCache.fixedtop = isNaN(top) ? (isNaN(bottom) ? cssCache.top : scrollTop + html.clientHeight - element.offsetHeight - bottom) : scrollTop + top;
+					cssCache.fixedleft = isNaN(left) ? (isNaN(right) ? cssCache.left : scrollLeft + html.clientWidth - element.offsetWidth - right) : scrollLeft + left;
 
 				} else {
 					setTimeout(function() {
