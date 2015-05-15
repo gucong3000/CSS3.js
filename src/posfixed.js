@@ -42,7 +42,7 @@
 						value *= html[isWidth ? "offsetWidth" : "offsetHeight"] / 100;
 					} else if (unit && absUnits[unit]) {
 						// 如果是绝对长度单位，根据dpi换算
-						value *= 72 / absUnits[unit];
+						value *= (screen[isWidth ? "logicalXDPI" : "logicalYDPI"] || 96) / absUnits[unit];
 					} else if (unit === "rem" && element !== html) {
 						value *= parseLength(html.currentStyle.fontSize);
 					} else if (unit === "em") {
