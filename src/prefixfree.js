@@ -285,6 +285,19 @@
 		}
 		root.removeChild(style);
 	}());
+	/**************************************
+	 * DOM function CSS.supports
+	 **************************************/
+	(function(CSS) {
+		var supports = CSS && CSS.supports;
+		if (self.properties.length && supports && /^function\s+\w+\(\)\s*\{\s*\[native code]\s*\}$/.test(supports)) {
+			CSS.supports = function() {
+				return supports.apply(CSS, [].map.call(arguments, function(arg) {
+					return fix("properties", "\\b", "\\b", self.prefix + "$1", arg);
+				}));
+			};
+		}
+	})(window.CSS);
 	// Properties that accept properties as their value
 	self.valueProperties = [
 		"transition",
