@@ -5,7 +5,6 @@
  */
 
 "use strict";
-/* global ActiveXObject */
 (function(window, undefined) {
 	var setTimeout = window.setTimeout,
 		selectorEngines = {
@@ -25,7 +24,7 @@
 			}
 		],
 		document = window.document,
-		head = document.documentElement.children[0],
+		head = document.head || document.documentElement.children[0],
 		XDomainRequest = window.XDomainRequest,
 		XMLHttpRequest = window.XMLHttpRequest,
 		ieVersion = document.querySelector ? document.documentMode : document.compatMode === "CSS1Compat" ? "XMLHttpRequest" in window ? 7 : 6 : 5,
@@ -36,6 +35,7 @@
 		// 缓存ajax请求
 		requestCache = {},
 		ready = [],
+		styleAttribute,
 		restStyle,
 		inProcess,
 		self;
@@ -120,6 +120,7 @@
 			// 创建请求缓存
 			requestCache[url] = [callback];
 
+			/* global ActiveXObject */
 			// 创建ajax对象
 			xhr = XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
 			xhr.onreadystatechange = function() {
@@ -344,23 +345,25 @@
 	 * @function styleAttribute
 	 * @param {HTMLElement} element 需要修正style属性的HTML元素
 	 */
-	function styleAttribute(element) {
+	styleAttribute = ieVersion < 8 ? function(element) {
 		var oldCss,
 			newCss;
-		if (ieVersion < 8) {
-			oldCss = element.style.cssText;
-			newCss = fix(oldCss, false, element);
-			if (oldCss !== newCss) {
-				element.style.cssText = newCss;
-			}
-		} else {
-			oldCss = element.getAttribute("style");
+		oldCss = element.style.cssText;
+		newCss = fix(oldCss, false, element);
+		if (oldCss !== newCss) {
+			element.style.cssText = newCss;
+		}
+	} : function(element) {
+		var oldCss,
+			newCss;
+		oldCss = element.getAttribute("style");
+		if (oldCss) {
 			newCss = fix(oldCss, false, element);
 			if (oldCss !== newCss) {
 				element.setAttribute("style", newCss);
 			}
 		}
-	}
+	};
 
 	/**
 	 * 修正整页所有css
