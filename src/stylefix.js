@@ -51,6 +51,31 @@
 	}
 
 	/**
+	 * @description 将对象转化为数组
+	 * @function toArray
+	 * @param {Object} obj 带转化元素
+	 * @return {Array|undefined} 转换成的数组
+	 */
+	function toArray(obj) {
+		if (obj && !(obj instanceof Array)) {
+			if (obj.toArray) {
+				obj = toArray(obj.toArray());
+			} else if (obj.length) {
+				// IE8下采用[].slice.call(nodeList, 0)方式转getElementsByTagName函数返回值报错，故采用for循环方式兼容
+				var arr = [],
+					i;
+				for (i = 0; i < obj.length; i++) {
+					arr.push(obj[i]);
+				}
+				obj = arr;
+			} else {
+				return;
+			}
+		}
+		return obj;
+	}
+
+	/**
 	 * @description 查找DOM元素
 	 * @function query
 	 * @param {String} expr css选择符
@@ -60,7 +85,7 @@
 	function query(expr, con) {
 		// 上下文对象
 		con = con || document;
-		var nodeList = [];
+		var nodeList;
 		// 遍历selectorEngines找到可用的外部DOM选择器
 		for (var engine in selectorEngines) {
 			var members, member, context = window;
@@ -71,23 +96,17 @@
 				if (typeof context === "function") {
 					try {
 						nodeList = context(expr, con);
-						if (nodeList && nodeList.length) {
-							break;
-						}
-					} catch (ex) {}
+					} catch (ex) {
+						continue;
+					}
+					if (nodeList = toArray(nodeList)) {
+						return nodeList;
+					}
 				}
 			}
 		}
-		// 返回外部DOM选择器找到的DOM或者使用querySelectorAll方法找到的DOM元素
-		try {
-			nodeList = nodeList && nodeList.length ? nodeList : con.querySelectorAll(expr);
-		} catch (ex) {
-			if (/^\w+$/.test(expr)) {
-				con.getElementsByTagName(expr);
-			}
-		}
-
-		return [].slice.call(nodeList, 0);
+		// 返回使用querySelectorAll方法或getElementsByTagName方法找到的DOM元素
+		return (con.querySelectorAll ? toArray(con.querySelectorAll(expr)) : 0) || (/^\w+$/.test(expr) ? toArray(con.getElementsByTagName(expr)) : 0) || [];
 	}
 
 	/**
