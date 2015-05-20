@@ -26,9 +26,6 @@
 		relUnits = {
 			px: 1
 		},
-		self = {
-			parse: parse
-		},
 		support = {
 			q: 0,
 			cm: 0,
@@ -42,11 +39,14 @@
 			vmin: 0,
 			"in": 0
 		},
+		self = {
+			support: support,
+			parse: parse
+		},
 		tester,
 		rem,
 		vh,
 		vw;
-
 
 	// 计算rem、vw、vh等相对长度单位所需各种变量
 	function resize() {
@@ -113,7 +113,7 @@
 	function addEvent(eventName, eventHandler) {
 		// 每次事件运行时都重新绑定，以便保证绑定在最后
 		// IE下，后绑定的事件会先运行
-		function eventHandlerFn(){
+		function eventHandlerFn() {
 			window.detachEvent(eventName, eventHandlerFn);
 			window.attachEvent(eventName, eventHandlerFn);
 			eventHandler();
@@ -170,7 +170,7 @@
 				return newValue ? newValue + "px /* RawVal`" + rawValue + "` */" : rawValue;
 			}
 		);
-	});
+	}, 1);
 
 	try {
 		module.exports = self;
