@@ -82,7 +82,7 @@
 
 	// 数字精确到小数点后四位，再往后四舍五入
 	function toFixed(num) {
-		return parseFloat((num).toFixed(4));
+		return +(num).toFixed(4);
 	}
 
 	// 将浏览器不支持的长度单位转换为等效的px单位的长度
