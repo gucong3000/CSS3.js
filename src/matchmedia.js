@@ -21,15 +21,22 @@
 		// screen
 		// screen and
 		_typeExpr = /\s*(only|not)?\s*(screen|print|[a-z\-]+)\s*(and)?\s*/i,
-		// (-vendor-min-width: 300px)
 		// (min-width: 300px)
 		// (width: 300px)
 		// (width)
 		// (orientation: portrait|landscape)
-		_mediaExpr = /^\s*\(\s*(-[a-z]+-)?(min-|max-)?([a-z\-]+)\s*(:?\s*([0-9]+(\.[0-9]+)?|portrait|landscape)(\w+)?)?\s*\)\s*$/,
+		_mediaExpr = /^\s*\(\s*(min-|max-)?([\w\-]+)\s*(:?\s*(\d+(\.\d+)?(\/\d+(\.\d+)?)?|portrait|landscape)(\w+)?)?\s*\)\s*$/,
 		_timer,
 
 		// Helper methods
+
+		/*
+			_matches
+		 */
+		_toFixed = function(num) {
+			// 数字精确到小数点后四位，再往后四舍五入
+			return +(num).toFixed(4);
+		},
 
 		/*
 			_matches
@@ -104,16 +111,14 @@
 					do {
 						expr = exprList[exprIndex].match(_mediaExpr);
 
-						if (!expr || !_features[expr[3]]) {
+						if (!expr || !(feature = _features[expr[2]])) {
 							match = false;
 							break;
 						}
 
-						prefix = expr[2];
-						length = expr[5];
-						value = length;
-						unit = expr[7];
-						feature = _features[expr[3]];
+						prefix = expr[1];
+						length = expr[4];
+						unit = expr[8];
 						feature = feature.call ? feature() : feature;
 
 						// Convert unit types
@@ -129,21 +134,29 @@
 								} else if (unit === "dpcm") {
 									// Convert resolution dpcm unit to pixels
 									value = length * 0.3937;
-								} else {
-									// default
-									value = Number(length);
 								}
 							}
+						} else if (expr[6]) {
+							try {
+								value = eval.call(_features, length);
+							} catch (ex) {
+
+							}
 						}
+						value = value || Number(length);
 
 						// Test for prefix min or max
 						// Test value against feature
-						if (prefix === "min-" && value) {
-							match = feature >= value;
-						} else if (prefix === "max-" && value) {
-							match = feature <= value;
-						} else if (value) {
-							match = feature === value;
+						if (value) {
+							feature = _toFixed(feature);
+							value = _toFixed(value);
+							if (prefix === "min-") {
+								match = feature >= value;
+							} else if (prefix === "max-") {
+								match = feature <= value;
+							} else {
+								match = feature === value;
+							}
 						} else {
 							match = !!feature;
 						}
@@ -231,7 +244,7 @@
 
 			// Sets properties of "_features" that change on resize and/or orientation.
 			_features["aspect-ratio"] = function() {
-				return (w() / h()).toFixed(2);
+				return (w() / h());
 			};
 			_features.orientation = function() {
 				return (h() >= w() ? "portrait" : "landscape");
@@ -242,7 +255,7 @@
 			_features.height = h;
 			_features["device-width"] = dw;
 			_features["device-height"] = dh;
-			_features["device-aspect-ratio"] = (dw / dh).toFixed(2);
+			_features["device-aspect-ratio"] = (dw / dh);
 			_features.color = c;
 			_features["color-index"] = Math.pow(2, c);
 			_features.resolution = _dpi;
@@ -344,8 +357,16 @@
 			// 如果浏览器完全不支持media query，则为其添加支持
 			StyleFix.register(function(css, raw) {
 				if (raw) {
-					return css.replace(/@media\s+([^\{]+)/g, function(str, strRules) {
-						return _matches(strRules) ? "@media all " : str;
+					return css.replace(/@media\s+(.*?\(.*?)\s*\{/g, function(str, strRules) {
+						strRules = strRules.toLowerCase();
+						// 将注释中储存了的原始值，再次取出
+						if (/^all\s*\/\*\s*rawrules`([^`]+)`\s*\*\/$/.test(strRules)) {
+							strRules = RegExp.$1;
+						}
+						// 屏幕宽度，高度，长宽比等才是动态数据，才需要在注释中保留原始值
+						var strRawRules = /\(\s*(m(ax|in)-)?(height|width|aspect-ratio)\s*\:/.test(strRules) || /\(\s*orientation\s*:\s*(portrait|landscape)\s*\)/.test(strRules) ? " /* rawrules`" + strRules + "` */" : "";
+						str = "@media " + (_matches(strRules) ? "all" + strRawRules : strRules) + " {";
+						return str;
 					});
 				}
 			});
