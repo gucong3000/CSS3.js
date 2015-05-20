@@ -62,8 +62,14 @@ CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 		msie = "runtimeStyle" in document.documentElement;
 		testElement = document.createElement("_");
 		prevResultsCache = {};
+		var __bind__RE_FIRST_LETTER = /(-)([a-z])/g, // __bind__RE_FIRST_LETTER
+			ToCamel_replacer = function(a, b, c) { // ToCamel_replacer
+				return c.toUpperCase();
+			},
+			testStyle = testElement.style; // testStyle
 
-		_CSS_supports = function(ToCamel_replacer, testStyle, testElement, propertyName, propertyValue) {
+		// _CSS_supports = function(ToCamel_replacer, testStyle, testElement, propertyName, propertyValue) {
+		_CSS_supports = function(propertyName, propertyValue) {
 			var name_and_value = propertyName + "\\/" + propertyValue;
 			if (name_and_value in prevResultsCache) {
 				return prevResultsCache[name_and_value];
@@ -73,7 +79,7 @@ CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 			 _ = document.documentElement.appendChild(document.createElement("_"))
 			 _.currentStyle[propertyName] == propertyValue
 			*/
-			var __bind__RE_FIRST_LETTER = this,
+			var // __bind__RE_FIRST_LETTER = this,
 				propertyName_CC = (propertyName + "").replace(__bind__RE_FIRST_LETTER, ToCamel_replacer);
 
 			var result = propertyName && propertyValue && (propertyName_CC in testStyle);
@@ -137,7 +143,8 @@ CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 			testStyle.cssText = "";
 
 			return prevResultsCache[name_and_value] = !!result;
-		}.bind(
+		};
+		/*.bind(
 			/(-)([a-z])/g, // __bind__RE_FIRST_LETTER
 			function(a, b, c) { // ToCamel_replacer
 				return c.toUpperCase();
@@ -145,6 +152,7 @@ CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 			testElement.style, // testStyle
 			msie ? testElement : null // testElement
 		);
+		*/
 	}
 
 	// _supportsCondition("(a:b) or (display:block) or (display:none) and (display:block1)")
