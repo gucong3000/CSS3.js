@@ -73,11 +73,14 @@
 			if (raw) {
 				css = fix("selectors", "", "\\b", self.prefixSelector, css);
 				css = fix("atrules", "@", "\\b", "@" + prefix + "$1", css);
+				css = css.replace(/@supports\s+(.*?)\{/ig, function(s, rules) {
+					return "@supports " + fix("properties", "([\\s\\:\\(])", "\\b", "$1" + prefix + "$2", rules) + "{";
+				});
 			}
 			// Fix double prefixing
 			css = css.replace(new RegExp("-" + prefix, "g"), "-");
 			// Prefix wildcard
-			css = css.replace(/-\*-(?=[a-z]+)/gi, self.prefix);
+			css = css.replace(/-\*-(?=[a-z]+)/gi, prefix);
 			return css;
 		},
 		property: function(property) {
@@ -134,7 +137,8 @@
 							return fn.apply(this, arguments);
 						};
 					}
-				} catch(ex){
+				} catch (ex) {
+
 				}
 			},
 			stylePropFix = function(prop, prefixProp) {
@@ -254,7 +258,11 @@
 				":read-only": null,
 				":read-write": null,
 				":any-link": null,
-				"::selection": null
+				":placeholder": null, // Firefox4-18
+				":input-placeholder": null, // IE10+
+				"::selection": null,
+				"::placeholder": null, // Firefox19+
+				"::input-placeholder": null // webkit
 			},
 			atrules = {
 				"keyframes": "name",
