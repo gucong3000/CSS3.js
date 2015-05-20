@@ -10,12 +10,14 @@
 		color: green;
 	}
 }
-@supports ((-ms-transform:rotate(7deg)) or (-webkit-transform:rotate(7deg)) or (transform:rotate(7deg)) or (-o-transform:rotate(7deg))) {
-	.supports-or {
-		-webkit-transform: rotate(7deg);
-		-ms-transform: rotate(7deg);
-		-o-transform: rotate(7deg);
+@supports (transform:rotate(7deg)) {
+	.supports-transform {
 		transform: rotate(7deg);
+	}
+}
+@supports (appearance:button) {
+	.supports-appearance {
+		appearance: button;
 	}
 }
 .fixed {

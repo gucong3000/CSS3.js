@@ -4,10 +4,6 @@
 <meta charset="utf-8">
 <title>supports demo</title>
 <link rel="stylesheet" href="css/supports.css">
-<!--[if lt IE 9]>
-<script src="http://cdn.staticfile.org/es5-shim/4.0.3/es5-shim.min.js"></script>
-<script src="http://cdn.staticfile.org/json2/20140204/json2.min.js"></script>
-<![endif]-->
 <script src="http://cdn.staticfile.org/seajs/2.3.0/sea.js"></script>
 <script src="../build/css3.js"></script>
 <script>
@@ -22,35 +18,39 @@ seajs.config({
 		<h2 class="supports">如果你的浏览器支持@supports，这行字会是绿色</h2>
 		<pre>
 @supports (display: block) {
-    /* 如果支持display: block,则下面指定的CSS会生效 */
-    .supports {
-    	color: green;
-    }
+	/* 如果支持display: block,则下面指定的CSS会生效 */
+	.supports {
+		color: green;
+	}
 }
 		</pre>
-		
-		<h2 class="supports-or">检测是否支持指定的CSS属性或者其带前缀版本</h2>
 
+		<h2 class="supports-transform">检测是否支持transform属性或者其带前缀版本</h2>
 		<pre>
-@supports ( (-ms-transform: rotate(7deg)) or (-webkit-transform: rotate(7deg)) 
-or (transform: rotate(7deg)) or (-o-transform: rotate(7deg)) ) {
-    … /* 如果支持不带前缀以及带前缀的transform属性,则下面指定的CSS会生效 */
-    .supports-or {
-		-webkit-transform: rotate(7deg);
-		-ms-transform: rotate(7deg);
-		-o-transform: rotate(7deg);
+/* 由于本demo同时也加载了prefixfree组件，所以无需写前缀 */
+@supports (transform:rotate(7deg)) {
+	.supports-transform {
 		transform: rotate(7deg);
 	}
 }
 		</pre>
-		
-		
+
+		<h2 class="supports-appearance">检测是否支持appearance属性或者其带前缀版本</h2>
+		<pre>
+/* 由于本demo同时也加载了prefixfree组件，所以无需写前缀 */
+@supports (appearance:button) {
+	.supports-appearance {
+		appearance: button;
+	}
+}
+		</pre>
+
 		<h2 class="supports-not">检测是否不支持指定的CSS属性</h2>
 		<div class="fixed"></div>
 		<pre>
 @supports ( not ((position: fixed)){
-    … /* 如果不支持position: fixed */
-    position: absolute;
+	/* 如果不支持position: fixed */
+	position: absolute;
 }
 		</pre>
 	</div>
