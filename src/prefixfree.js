@@ -260,9 +260,9 @@
 				":any-link": null,
 				":placeholder": null, // Firefox4-18
 				":input-placeholder": null, // IE10+
-				"::selection": null,
+				"::selection": null, // Firefox2+
 				"::placeholder": null, // Firefox19+
-				"::input-placeholder": null // webkit
+				"::input-placeholder": null // WebKit
 			},
 			atrules = {
 				"keyframes": "name",
