@@ -12,13 +12,13 @@
 			PIE: msie < 9 ? "PIE_IE678" : (msie < 11 ? "PIE_IE9" : core),
 			selectivizr: document.querySelector ? core : "selectivizr",
 			matchmedia: window.matchMedia ? core : "matchmedia",
+			"es5-shim": [].filter ? core : "es5-shim.min",
 			mOxie: window.FileReader ? core : "moxie.js",
 			prefixfree: msie < 9 ? core : "prefixfree",
 			supports: window.CSS ? core : "supports",
 			cssprops: msie < 11 ? "cssprops" : core,
 			posfixed: msie < 7 ? "posfixed" : core,
 			jquery: "jquery-1.11.2.min.js",
-			"es5-shim": "es5-shim.min",
 			cssunits: "cssunits",
 			stylefix: core
 		}

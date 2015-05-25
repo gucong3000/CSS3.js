@@ -6,6 +6,7 @@
 
 "use strict";
 (function(window, undefined) {
+	require("es5-shim");
 	var setTimeout = window.setTimeout,
 		selectorEngines = {
 			"NW": "*.Dom.select",
@@ -480,6 +481,11 @@
 		}
 	}
 
+	/**
+	 * @description 在文档最开头<head>内最前位置添加css
+	 * @param {String} cssText css内容
+	 *
+	 */
 	function addRestCss(cssText) {
 		if (!restStyle) {
 			restStyle = document.createElement("style");
@@ -493,6 +499,14 @@
 			restStyle.textContent += cssText;
 		}
 		inProcess = null;
+	}
+
+	/**
+	 * @description 判断文档是否加载完毕
+	 * @return {Boolean} 是否加载完毕
+	 */
+	function isDocComplete() {
+		return /^(complete|interactive)$/.test(document.readyState);
 	}
 
 	/*!
@@ -568,15 +582,7 @@
 		}
 	}
 
-	if (require && ![].filter) {
-		require.async(["es5-shim"], init);
-	} else {
-		init();
-	}
-
-	function isDocComplete() {
-		return /^(complete|interactive)$/.test(document.readyState);
-	}
+	init();
 
 	self = {
 		query: query,
