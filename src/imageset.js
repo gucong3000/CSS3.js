@@ -3,8 +3,7 @@
 	require("prefixfree");
 	require("stylefix");
 	var StyleFix = window.stylefix || require("stylefix"),
-		devicePixelRatio = window.devicePixelRatio || 1,
-		regexp = /([\s\:\,])image-set\(\s*url\(.*?\)\s+\d+(\.\d+)?x(\s*,\s*url\(.*?\)\s+\d+(\.\d+)?x)*\s*\)/i;
+		devicePixelRatio = window.devicePixelRatio || 1;
 
 	function imageset(sets) {
 		var url,
@@ -23,7 +22,7 @@
 
 	if (!CSS.supports("(background:image-set(url(foo.png) 1x)")) {
 		StyleFix.register(function(css) {
-			return css.replace(regexp, function($0, $1) {
+			return css.replace(/([\s\:\,])image-set\(\s*url\(.*?\)\s+\d+(\.\d+)?x(\s*,\s*url\(.*?\)\s+\d+(\.\d+)?x)*\s*\)/ig, function($0, $1) {
 				return $1 + imageset($0.slice(11, $0.length - 1).trim().split(/\s*,\s*/));
 			});
 		});
