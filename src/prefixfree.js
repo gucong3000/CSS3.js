@@ -190,6 +190,14 @@
 	(function() {
 		// Values that might need prefixing
 		var functions = {
+			"canvas": {
+				property: "backgroundImage",
+				params: "test"
+			},
+			"image-set": {
+				property: "backgroundImage",
+				params: "url(a.png) 1x, url(b.png) 2x"
+			},
 			"linear-gradient": {
 				property: "backgroundImage",
 				params: "red, teal"
