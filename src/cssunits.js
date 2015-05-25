@@ -1,3 +1,7 @@
+/**
+ * CSS长度单位兼容
+ */
+
 "use strict";
 (function(window) {
 	var StyleFix = window.stylefix || require("stylefix"),

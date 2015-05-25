@@ -1,3 +1,7 @@
+/**
+ * IE下各种css3属性兼容，圆角、盒阴影、背景渐变等
+ */
+
 "use strict";
 (function(window) {
 

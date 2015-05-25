@@ -1,3 +1,7 @@
+/**
+ * IE6下position: fixed;兼容
+ */
+
 "use strict";
 (function(window, StyleFix, cssprops) {
 

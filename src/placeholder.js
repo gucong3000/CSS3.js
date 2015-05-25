@@ -1,3 +1,7 @@
+/**
+ * html5中placeholder属性兼容
+ */
+
 (function(window, document) {
 
 	"use strict";
