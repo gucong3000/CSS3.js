@@ -37,6 +37,7 @@
 		requestCache = {},
 		ready = [],
 		styleAttribute,
+		eventInserted,
 		restStyle,
 		inProcess,
 		self;
@@ -398,26 +399,29 @@
 			// Inline styles
 			query("[style]").forEach(styleAttribute);
 
-			addEventListener(document, "DOMNodeInserted", function(e) {
-				var target = e.target;
+			if (!eventInserted) {
+				eventInserted = true;
+				addEventListener(document, "DOMNodeInserted", function(e) {
+					var target = e.target;
 
-				switch (target.tagName) {
-					case "STYLE":
-						if (target !== inProcess) {
-							styleElement(target);
-						}
-						break;
-					case "LINK":
-						if (/^stylesheet$/i.test(target.rel)) {
-							linkElement(target);
-						}
-						break;
-					default:
-						if (target.style) {
-							styleAttribute(target);
-						}
-				}
-			});
+					switch (target.tagName) {
+						case "STYLE":
+							if (target !== inProcess) {
+								styleElement(target);
+							}
+							break;
+						case "LINK":
+							if (/^stylesheet$/i.test(target.rel)) {
+								linkElement(target);
+							}
+							break;
+						default:
+							if (target.style) {
+								styleAttribute(target);
+							}
+					}
+				});
+			}
 
 		} else {
 			setTimeout(process, 50);
