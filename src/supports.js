@@ -172,22 +172,20 @@ CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 
 			}
 		}
-		throw new Error("SYNTAX_ERR");
+		return false;
 	}
 
 	/**
 	 * @expose
 	 */
 	_CSS.supports = function(a, b) {
-		if (!arguments.length) {
+		var argLen = arguments.length
+
+		if (argLen) {
+			return argLen === 1 ? _supportsCondition(a) : _CSS_supports(a, b);
+		} else {
 			throw new Error("WRONG_ARGUMENTS_ERR"); //TODO:: DOMException ?
 		}
-
-		if (arguments.length === 1) {
-			return _supportsCondition(a);
-		}
-
-		return _CSS_supports(a, b);
 	};
 
 	(global.stylefix || require("stylefix")).register(function(css, raw) {

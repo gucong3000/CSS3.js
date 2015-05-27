@@ -6,7 +6,7 @@
 "use strict";
 (function(window) {
 	require("prefixfree");
-	require("stylefix");
+	require("supports");
 	var StyleFix = window.stylefix || require("stylefix"),
 		screen = window.screen,
 		devicePixelRatio = window.devicePixelRatio || (screen.deviceXDPI / screen.logicalXDPI) || 1,
@@ -25,7 +25,9 @@
 				uri = set[1];
 			}
 		});
-		return uri;
+		if (uri) {
+			return uri.replace(/(['"]?\s*\))?$/, "#" + ratio + "x$1");
+		}
 	}
 
 	function srcSet(img) {
@@ -40,18 +42,8 @@
 		StyleFix.query("img").forEach(srcSet);
 	}
 
-	// CSS中兼容image-set()方法
-	if (!CSS.supports("(background: image-set(url(foo.png) 1x))")) {
-		StyleFix.register(function(css) {
-			return css.replace(/([\s\:\,])image-set\(\s*(url\(.*?\)\s+\d+(\.\d+)?x(\s*,\s*url\(.*?\)\s+\d+(\.\d+)?x)*)\s*\)/ig, function($0, $1, $2) {
-				return $1 + (imageset($2) || $0.slice(0));
-			});
-		});
-	}
-
 	// HTML中兼容srcset属性
 	if (!(strSrcSet in new Image())) {
-		StyleFix.ready(fixSrcSet);
 		if (window.addEventListener) {
 			["DOMAttrModified", "DOMNodeInserted"].forEach(function(eventName) {
 				window.addEventListener(eventName, fixSrcSet, false);
@@ -75,6 +67,16 @@
 		if (window.attachEvent) {
 			window.attachEvent("onpropertychange", fixSrcSet);
 		}
+		StyleFix.ready(fixSrcSet);
+	}
+
+	// CSS中兼容image-set()方法
+	if (!CSS.supports("background", "image-set(url(foo.png) 1x)")) {
+		StyleFix.register(function(css) {
+			return css.replace(/([\s\:\,])image-set\(\s*(url\(.*?\)\s+\d+(\.\d+)?x(\s*,\s*url\(.*?\)\s+\d+(\.\d+)?x)*)\s*\)/ig, function($0, $1, $2) {
+				return $1 + (imageset($2) || $0.slice(0));
+			});
+		});
 	}
 
 })(window);
