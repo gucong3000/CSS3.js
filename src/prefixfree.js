@@ -66,7 +66,7 @@
 			// Prefix properties *inside* values (issue #8)
 			if (self.properties.length) {
 				var regex = new RegExp("\\b(" + self.properties.join("|") + ")(?!:)", "gi");
-				css = fix("valueProperties", "\\b", ":(.+?)(;|\}|$)", function($0) {
+				css = fix("valueProperties", "\\b", ":(.+?)(;|}|$)", function($0) {
 					return $0.replace(regex, prefix + "$1");
 				}, css);
 			}
@@ -304,15 +304,19 @@
 	/**************************************
 	 * DOM function CSS.supports
 	 **************************************/
-	(function(CSS) {
-		var supports = CSS && CSS.supports;
-		if (self.properties.length && supports && /^function\s+\w+\(\)\s*\{\s*\[native code]\s*\}$/.test(supports)) {
-			CSS.supports = function() {
-				return supports.apply(CSS, [].map.call(arguments, function(arg) {
-					return self.prefixCSS(fix("properties", "\\b", "\\b", self.prefix + "$1", arg));
-				}));
-			};
+	(function() {
+		function fixFn(obj, fnName) {
+			var nativeFn;
+			if (obj && /^function\s+\w+\(\)\s*\{\s*\[native code]\s*\}$/.test(nativeFn = obj[fnName])) {
+				obj[fnName] = function() {
+					return nativeFn.apply(obj, [].map.call(arguments, function(arg) {
+						return self.prefixCSS(fix("properties", "\\b", "\\b", self.prefix + "$1", arg));
+					}));
+				};
+			}
 		}
+		fixFn(window.CSS, "supports");
+		fixFn(window, "supportsCSS");
 	})(window.CSS);
 	// Properties that accept properties as their value
 	self.valueProperties = [
