@@ -5,7 +5,7 @@
 	var eventPrefix = "",
 		addEvent = win.addEventListener || (eventPrefix = "on") && win.attachEvent,
 		StyleFix = win.stylefix || require("stylefix"),
-		cssunits = require("cssunits");
+		cssunits = win.cssunits || require("cssunits");
 
 	// Internal globals
 	var _dpi,
