@@ -75,11 +75,12 @@ CSS3 polyfill
 ```
 
 ```CSS
-	@supports ( display: flexbox ) {  
-		body, #navigation, #content { display: flexbox; }  
-		#navigation { background: blue; color: white; }  
-		#article { background: white; color: black; }  
-	} 
+	@supports ( display: flexbox ) {
+		#navigation,
+		#content {
+			display: flexbox;
+		}
+	}
 ```
 
 上面的规则表示，当浏览器支持弹性盒子布局时，括号里的所有样式将会生效
