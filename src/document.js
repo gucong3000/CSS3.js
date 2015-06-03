@@ -54,7 +54,6 @@
 
 	// _documentCondition("url() url-prefix() domain() regexp()")
 	function _documentCondition(str) {
-		console.log(str);
 		var result,
 			rule_type,
 			rule_content,
