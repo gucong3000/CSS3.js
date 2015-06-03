@@ -1,0 +1,24 @@
+body {
+	width: 600px;
+	margin: 80px auto;
+}
+@document url(http://alex.css3.com/demos/document.html) {
+	.url {
+		color: red;
+	}
+}
+@document url-prefix(http://alex.css3.com/demos/) {
+	.prefix {
+		color: yellow;
+	}
+}
+@document domain(alex.css3.com) {
+	.domain {
+		color: green;
+	}
+}
+@document regexp("http:.*") {
+	.regexp {
+		color: blue;
+	}
+}
