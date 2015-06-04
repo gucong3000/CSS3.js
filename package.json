@@ -25,11 +25,11 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "gulp": "^3.8.11",
-    "gulp-jshint": "^1.10.0",
-    "gulp-plumber": "^1.0.0",
+    "gulp": "^3.9.0",
+    "gulp-jshint": "^1.11.0",
+    "gulp-plumber": "^1.0.1",
     "gulp-uglify": "^1.2.0",
-    "gulp-wrapper": "^0.1.5",
+    "gulp-wrapper": "^1.0.0",
     "opener": "^1.4.1",
     "yuidocjs": "^0.6.0"
   }
