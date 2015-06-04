@@ -87,6 +87,31 @@ CSS3 polyfill
 
 基于[CSS.supports](https://github.com/termi/CSS.supports)
 
+## url查询 @document
+
+```javascript
+	require("document");
+```
+
+```CSS
+	@document url(http://www.w3.org/),
+				url-prefix(http://www.w3.org/Style/),
+				domain(mozilla.org),
+				regexp("https:.*")
+	{
+		/* 该条CSS规则会应用在下面的网页:
+		 + URL为"http://www.w3.org/"的页面.
+		 + 任何URL以"http://www.w3.org/Style/"开头的网页
+		 + 任何主机名为"mozilla.org"或者主机名以".mozilla.org"结尾的网页     
+		 + 任何URL以"https:"开头的网页 */
+
+		/* make the above-mentioned pages really ugly */
+		body { color: purple; background: yellow; }
+	}
+```
+
+基于[@document文档](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@document)
+
 ## 长度单位兼容
 
 - IE兼容vw、vh、vmax、vmin、rem等相对长度单位
