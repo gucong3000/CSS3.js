@@ -45,6 +45,7 @@
 		return result;
 	}
 
+	// 分解@docuemnt规则，按逗号拆分，解析规则
 	function _document(strRules) {
 		return strRules.split(/\s*,\s*(?=[\w\-]+\()/).some(function(rule) {
 			rule = rule.match(/(.+)\(\s*(.+)\s*\)/);
