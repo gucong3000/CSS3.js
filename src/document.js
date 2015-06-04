@@ -59,6 +59,7 @@
 			rule_content,
 			url_href = global.location.href;
 
+
 		if (str) {
 			rule_type = str.substr(0, str.indexOf("("));
 			rule_content = (str.match(/\((.*?)\)/))[1];
@@ -69,20 +70,21 @@
 					}
 					break;
 				case "url-prefix":
-					var url_prefix = url_href.substr(0, (url_href.lastIndexOf("/") + 1));
-					if (url_prefix === rule_content) {
+					if (url_href.indexOf(rule_content) === 0) {
 						result = true;
 					}
 					break;
 				case "domain":
 					var url_hostname = global.location.hostname;
-					if (url_hostname.match(rule_content)) {
+					if (url_hostname.lastIndexOf(rule_content) === 0) {
 						result = true;
 					}
 					break;
 				case "regexp":
+					// 去掉首尾的双引号
 					rule_content = rule_content.substr(1, (rule_content.length - 2));
-					if (url_href.match(rule_content)) {
+					console.log(new RegExp("^" + rule_content + "$"), 86);
+					if (new RegExp("^" + rule_content + "$").test(url_href)) {
 						result = true;
 					}
 					break;
