@@ -88,10 +88,10 @@ CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 		if (StyleFix) {
 			StyleFix.register(function(css, raw) {
 				if (raw) {
-					return css.replace(/@supports\s+([^\{]+)/g, function(str, strRules) {
+					return css.replace(/@supports\s+(.*?)\s*\{/g, function(str, strRules) {
 						try {
 							if (strRules && _supportsCondition(strRules)) {
-								str = "@media all ";
+								str = "@media all {";
 							}
 						} catch (ex) {
 
