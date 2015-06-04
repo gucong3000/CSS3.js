@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="renderer" content="webkit">
+<meta charset="utf-8">
+<title>document demo</title>
+<link rel="stylesheet" href="css/document.css">
+<script src="../build/sea.js"></script>
+<script src="../build/css3.js"></script>
+<script>
+seajs.config({
+  debug: true,
+  base: "../build/"
+}).use(["jquery", "prefixfree", "document"]);
+</script>
+</head>
+<body>
+    <h2 class="url">如果浏览器支持 @document url(http://xxx.xxx.com) 那么这行字就是红色的。xxx.xxx.com 为当前网页完整地址。</h2>
+    <h2 class="prefix">如果浏览器支持 @document url-prefix(http://xxx.xxx.com/xxx/) 那么这行字就是黄色的。url 以http://xxx.xxx.com/xxx/  开头。</h2>
+    <h2 class="domain">如果浏览器支持 @document domain(xxx.com) 那么这行字就是绿色的。xxx.com 是 url 的host 或者，url是以xxx.com结尾。</h2>
+    <h2 class="regexp">如果浏览器支持 @document regexp("http:.*") 那么这行字就是蓝色的。url 匹配"http:.*"。</h2>
+</body>
+</html>
