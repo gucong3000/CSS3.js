@@ -84,6 +84,7 @@ CSS.supports("webkit-animation", "name") is true. Think this is wrong.
 
 		}
 
+		// 在此注册StyleFix.register，是因Opera 12.1下支持window.supportsCSS()，且无需修复css，只需兼容DOM API即可
 		if (StyleFix) {
 			StyleFix.register(function(css, raw) {
 				if (raw) {
