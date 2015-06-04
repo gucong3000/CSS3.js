@@ -8,7 +8,8 @@
 		debug: true,
 		// 别名配置
 		alias: {
-			placeholder: (!("placeholder" in document.createElement("input")) || msie || +navigator.userAgent.replace(/.*(?:\bA\w+WebKit)\/?(\d+).*/i, "$1") < 536) ? "placeholder" : core,
+			placeholder: msie || (!("placeholder" in document.createElement("input")) || +navigator.userAgent.replace(/.*(?:\bA\w+WebKit)\/?(\d+).*/i, "$1") < 536) ? "placeholder" : core,
+			document: !msie && window.netscape ? "prefixfree" : "document",
 			PIE: msie < 9 ? "PIE_IE678" : (msie < 11 ? "PIE_IE9" : core),
 			selectivizr: document.querySelector ? core : "selectivizr",
 			matchmedia: window.matchMedia ? core : "matchmedia",
