@@ -24,6 +24,7 @@
 			}
 		};
 
+	// 动态生成正则检测字符串
 	function regTest(regexp, string) {
 		return new RegExp(regexp).test(string || location.href);
 	}
