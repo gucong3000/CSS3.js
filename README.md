@@ -3,6 +3,8 @@ CSS3.js
 
 CSS3 polyfill
 
+此项目为IE6+、UC手机版或其他老旧浏览器带来各种CSS3属性的兼容
+
 ## css属性兼容
 
 - IE下兼容圆角，阴影、渐变。基于[PIE](http://css3pie.com/)
@@ -110,7 +112,7 @@ CSS3 polyfill
 	}
 ```
 
-基于[@document文档](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@document)
+[@document文档](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@document)
 
 ## 长度单位兼容
 
