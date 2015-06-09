@@ -3,7 +3,7 @@ CSS3.js
 
 CSS3 polyfill
 
-此项目为IE6+、UC手机版或其他老旧浏览器带来各种CSS3属性的兼容
+专治各种不服，让IE6+、Android 2.3+ 等老旧浏览器对CSS3服服帖帖
 
 ## css属性兼容
 
@@ -40,6 +40,7 @@ CSS3 polyfill
 - 为IE6-8下提供各种css选择符中的伪类选、伪对象、属性择器支持。基于[selectivizr](http://www.selectivizr.com/)
 
 ```javascript
+	require("jquery");	//可使用的外部选择器有：Nwmatcher、MooTools等，见[原版selectivizr官网](http://www.selectivizr.com/)
 	require("selectivizr");
 ```
 

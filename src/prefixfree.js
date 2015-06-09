@@ -266,11 +266,14 @@
 				":read-only": null,
 				":read-write": null,
 				":any-link": null,
-				":placeholder": null, // Firefox4-18
-				":input-placeholder": null, // IE10+
-				"::selection": null, // Firefox2+
-				"::placeholder": null, // Firefox19+
-				"::input-placeholder": null // WebKit
+				":placeholder": null, // Firefox4-18	:-moz-placeholder
+				":input-placeholder": null, // IE10+	:-ms-input-placeholder
+				"::placeholder": null, // Firefox19+	::-moz-placeholder
+				"::input-placeholder": null, // webkit	::-webkit-input-placeholder
+				"::validation-bubble": null,
+				"::media-controls": null,
+				"::scrollbar": null,
+				"::selection": null // Firefox2+		::-moz-selection
 			},
 			atrules = {
 				"keyframes": "name",
