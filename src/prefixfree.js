@@ -115,6 +115,10 @@
 			style = getComputedStyle(root, null),
 			dummy = document.createElement("div").style,
 			prefix = StyleFix.ieVersion ? "ms" : (window.opera ? "o" : (window.netscape ? "moz" : "webkit")),
+			reFnName = new RegExp("^" + prefix + "([A-Z])(\\w)"),
+			fnNameMap = {
+				matchesSelector: "matches"
+			},
 			styleProto = window.CSSStyleDeclaration.prototype,
 
 			// Why are we doing this instead of iterating over properties in a .style object? Cause Webkit won't iterate over those.
@@ -183,6 +187,42 @@
 			properties.push("transform", "transform-origin");
 		}
 		self.properties = properties.sort();
+
+		// 修复各种对象中，名称以私有前缀开头的成员
+		function fixFnName(obj, oldPropName, enumerable) {
+			if (reFnName.test(oldPropName)) {
+				var newPropName = oldPropName.replace(reFnName, function(s, letter1, letter2) {
+					if (/[a-z]/.test(letter2)) {
+						letter1 = letter1.toLowerCase();
+					}
+					return letter1 + letter2;
+				});
+				newPropName = fnNameMap[newPropName] || newPropName;
+				if (!(newPropName in obj)) {
+					Object.defineProperty(obj, newPropName, {
+						get: function() {
+							return this[oldPropName];
+						},
+						set: function(val) {
+							this[oldPropName] = val;
+						},
+						enumerable: enumerable
+					});
+				}
+			}
+		}
+		if (Object.getOwnPropertyNames) {
+			Object.getOwnPropertyNames(window).forEach(function(obj) {
+				if (/^[A-Z]/.test(obj)) {
+					obj = window[obj].prototype;
+					for (var propName in obj) {
+						fixFnName(obj, propName, true);
+					}
+				} else {
+					fixFnName(window, obj);
+				}
+			});
+		}
 	}());
 	/**************************************
 	 * Values
@@ -320,7 +360,7 @@
 		}
 		fixFn(window.CSS, "supports");
 		fixFn(window, "supportsCSS");
-	})(window.CSS);
+	})();
 	// Properties that accept properties as their value
 	self.valueProperties = [
 		"transition",
