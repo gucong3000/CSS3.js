@@ -11,7 +11,7 @@
 seajs.config({
 	debug: true,
 	base: "../build/"
-}).use(["stylefix", "matchmedia"], function(jQuery, StyleFix, PrefixFree) {
+}).use(["stylefix", "matchmedia"], function() {
 	var mql = window.matchMedia('screen and (color) and (orientation: landscape) and (min-width: 600px) and (min-height: 400px)');
 	console.log(mql);
 	/*
