@@ -115,7 +115,7 @@
 			style = getComputedStyle(root, null),
 			dummy = document.createElement("div").style,
 			prefix = StyleFix.ieVersion ? "ms" : (window.opera ? "o" : (window.netscape ? "moz" : "webkit")),
-			reFnName = new RegExp("^" + prefix + "([A-Z])(\\w)"),
+			reFnName = /^(?:webkit|moz|ms|o|Ms|O)([A-Z])(\w)/,
 			fnNameMap = {
 				matchesSelector: "matches"
 			},
