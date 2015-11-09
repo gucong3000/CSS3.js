@@ -6,7 +6,9 @@
 
 "use strict";
 (function(window, undefined) {
-	require("es5-shim");
+	if (!Object.keys) {
+		require("es5-shim");
+	}
 	var setTimeout = window.setTimeout,
 		selectorEngines = {
 			"NW": "*.Dom.select",
@@ -541,8 +543,10 @@
 			}
 		}
 		try {
-			return $(completed);
-		} catch (ex) {}
+			return window.$(completed);
+		} catch (ex) {
+
+		}
 
 		if (isDocComplete()) {
 			// Handle it asynchronously to allow scripts the opportunity to delay ready
