@@ -115,15 +115,15 @@
 			style = getComputedStyle(root, null),
 			dummy = document.createElement("div").style,
 			prefix = StyleFix.ieVersion ? "ms" : (window.opera ? "o" : (window.netscape ? "moz" : "webkit")),
-			reFnName = /^(?:webkit|moz|ms|o|Ms|O)([A-Z])(\w)/,
-			fnNameMap = {
+			rePreFixName = /^(?:webkit|moz|ms|o|Ms|O)([A-Z])(\w)/,
+			propNameMap = {
 				matchesSelector: "matches"
 			},
 			styleProto = window.CSSStyleDeclaration.prototype,
 
 			// Why are we doing this instead of iterating over properties in a .style object? Cause Webkit won't iterate over those.
 			iterate = function(property) {
-				property = property.match(/^(-\w+-)(.+)/);
+				property = property.match(/^(-\w+-)(.+)$/);
 				if (property && !supported(property[2]) && supported(property[0])) {
 					stylePropFix(property[2], property[0]);
 				}
@@ -145,22 +145,39 @@
 
 				}
 			},
+			porpProxy = function(obj, oldPropName, newPropName) {
+				if (!(newPropName in obj)) {
+					Object.defineProperty(obj, newPropName, {
+						get: function() {
+							return this[oldPropName];
+						},
+						set: function(val) {
+							this[oldPropName] = val;
+						},
+						enumerable: true
+					});
+					return obj;
+				}
+			},
 			stylePropFix = function(prop, prefixProp) {
 				if (!prefixes[prop]) {
 					prefixes[prop] = prefixProp;
 					properties.push(prop);
 					iterate(prefixProp.replace(/-\w+$/, ""));
-					prefixProp = self.camelCase(prefixProp);
-					Object.defineProperty(styleProto, self.camelCase(prop), {
-						get: function() {
-							return this[prefixProp];
-						},
-						set: function(val) {
-							this[prefixProp] = val;
-						},
-						configurable: true,
-						enumerable: true
+					porpProxy(styleProto, prefixProp, prop) && porpProxy(styleProto, self.camelCase(prefixProp), self.camelCase(prop));
+				}
+			},
+			// 修复各种对象中，名称以私有前缀开头的成员
+			fixPorpName = function(obj, oldPropName) {
+				if (rePreFixName.test(oldPropName)) {
+					var newPropName = oldPropName.replace(rePreFixName, function(s, letter1, letter2) {
+						if (/[a-z]/.test(letter2)) {
+							letter1 = letter1.toLowerCase();
+						}
+						return letter1 + letter2;
 					});
+					newPropName = propNameMap[newPropName] || newPropName;
+					return porpProxy(obj, oldPropName, newPropName);
 				}
 			};
 
@@ -188,38 +205,13 @@
 		}
 		self.properties = properties.sort();
 
-		// 修复各种对象中，名称以私有前缀开头的成员
-		function fixFnName(obj, oldPropName, enumerable) {
-			if (reFnName.test(oldPropName)) {
-				var newPropName = oldPropName.replace(reFnName, function(s, letter1, letter2) {
-					if (/[a-z]/.test(letter2)) {
-						letter1 = letter1.toLowerCase();
-					}
-					return letter1 + letter2;
-				});
-				newPropName = fnNameMap[newPropName] || newPropName;
-				if (!(newPropName in obj)) {
-					Object.defineProperty(obj, newPropName, {
-						get: function() {
-							return this[oldPropName];
-						},
-						set: function(val) {
-							this[oldPropName] = val;
-						},
-						enumerable: enumerable
-					});
-				}
-			}
-		}
-		if (Object.getOwnPropertyNames) {
+		if (Object.getPrototypeOf) {
 			Object.getOwnPropertyNames(window).forEach(function(obj) {
-				if (/^[A-Z]/.test(obj)) {
+				if (!fixPorpName(window, obj) && /^[A-Z]/.test(obj)) {
 					obj = window[obj].prototype;
 					for (var propName in obj) {
-						fixFnName(obj, propName, true);
+						fixPorpName(obj, propName);
 					}
-				} else {
-					fixFnName(window, obj);
 				}
 			});
 		}
