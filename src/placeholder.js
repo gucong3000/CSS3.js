@@ -7,9 +7,9 @@
 	"use strict";
 
 	var strPlaceholder = "placeholder",
-		styleRules = strPlaceholder + "{position:absolute;cursor:text;color:gray;padding:0;border:0;overflow:hidden;-ms-user-select:none;user-select:none;pointer-events:none;}textarea{overflow: auto;}",
+		styleRules = strPlaceholder + "{position:absolute;cursor:text;color:gray;padding:0;border:0;overflow:hidden;-webkit-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none;}textarea{overflow: auto;}",
 		attrName = "data-" + strPlaceholder + new Date().getTime() + Math.random(),
-		StyleFix = window.stylefix || require("stylefix"),
+		stylefix = window.stylefix,
 		strDOMAttrModified = "DOMAttrModified",
 		root = document.documentElement,
 		parseInt = window.parseInt,
@@ -234,6 +234,12 @@
 	function init() {
 		forEach(document.querySelectorAll("input,textarea"), createHolder);
 	}
+
+	try {
+		stylefix = stylefix || require("stylefix");
+	} catch (ex) {
+
+	}
 	if (window.opera) {
 		// 老版本Opera 12.1 及以前版本不做任何处理，因为无解决方案
 		return;
@@ -263,7 +269,7 @@
 			}
 
 			// 现代浏览器中使用定时器不断刷新页面上的placeholder效果
-			setInterval(init, 200);
+			setInterval(init, 800);
 
 			// IE 10+、Safari中placeholder在文本框focus时则消失，这与其他浏览器有差异，用css干掉其原生的placeholder功能
 			styleRules += (document.documentMode ? ":-ms-input-" : "::-webkit-input-") + strPlaceholder + "{color:transparent !important;}";
@@ -282,15 +288,34 @@
 			})();
 		} catch (ex) {
 			// IE6-8兼容placeholder初始化
-			StyleFix.ready(function() {
+			function initInputs() {
 				forEach(["input", "textarea"], function(tagName) {
 					forEach(document.getElementsByTagName(tagName), createHolder);
 				});
-			});
+			}
+			if (stylefix) {
+				stylefix.ready(initInputs);
+			} else if (window.$) {
+				$(initInputs);
+			} else {
+				window.attachEvent("onload", initInputs);
+			}
 		}
 
 		// 写样式表
-		StyleFix.addRestCss(styleRules);
+		if (stylefix) {
+			stylefix.addRestCss(styleRules);
+		} else {
+			var restStyle = document.createElement("style");
+			var head = document.head || document.documentElement.children[0];
+			head.insertBefore(restStyle, head.firstChild);
+
+			if (restStyle.styleSheet) {
+				restStyle.styleSheet.cssText = styleRules;
+			} else {
+				restStyle.textContent = styleRules;
+			}
+		}
 
 		try {
 			module.exports = createHolder;
@@ -300,15 +325,17 @@
 
 	} else {
 		// 完美支持Placeholder效果的浏览器，检查需要前缀的，自动添加前缀
-		try {
-			document.querySelector("::placeholder");
-		} catch (ex) {
-			strPlaceholder = "::-" + (window.netscape ? "moz" : "webkit-input") + "-$1";
-			StyleFix.register(function(css, raw) {
-				if (raw) {
-					return css.replace(/::(placeholder)\b/g, strPlaceholder);
-				}
-			});
+		if (stylefix) {
+			try {
+				document.querySelector("::placeholder");
+			} catch (ex) {
+				strPlaceholder = "::-" + (window.netscape ? "moz" : "webkit-input") + "-$1";
+				stylefix.register(function(css, raw) {
+					if (raw) {
+						return css.replace(/::(placeholder)\b/g, strPlaceholder);
+					}
+				});
+			}
 		}
 	}
 })(this, document);
