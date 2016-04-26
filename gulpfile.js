@@ -11,7 +11,7 @@ function errrHandler(e) {
 	var msg = e.toString().replace(/\x1B\[\d+m/g, "");
 	if (!msgErrs[msg]) {
 		msgErrs[msg] = msg;
-		console.log(JSON.stringify(e, 0, 4).trim() || msg);
+		console.error(JSON.stringify(e, 0, 4).trim() || msg);
 	}
 }
 
