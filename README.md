@@ -5,6 +5,8 @@ CSS3 polyfill
 
 专治各种不服，让IE6+、Android 2.3+ 等老旧浏览器对CSS3服服帖帖
 
+** 注意请在http环境下使用，本地双击html打开无效 **
+
 ## css属性兼容
 
 - IE下兼容圆角，阴影、渐变。基于[PIE](http://css3pie.com/)
