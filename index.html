@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640">
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Css3.js by gucong3000</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/gucong3000/CSS3.js">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Css3.js</h1>
+            <h2>CSS3 polyfill</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/gucong3000/CSS3.js/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/gucong3000/CSS3.js/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>
+<a id="css3js" class="anchor" href="#css3js" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CSS3.js</h1>
+
+<p>CSS3 polyfill</p>
+
+<p>专治各种不服，让IE6+、Android 2.3+ 等老旧浏览器对CSS3服服帖帖</p>
+
+<p>** 注意请在http环境下使用，本地双击html打开无效 **</p>
+
+<h2>
+<a id="css属性兼容" class="anchor" href="#css%E5%B1%9E%E6%80%A7%E5%85%BC%E5%AE%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>css属性兼容</h2>
+
+<ul>
+<li>IE下兼容圆角，阴影、渐变。基于<a href="http://css3pie.com/">PIE</a>
+</li>
+<li>IE9下自动屏蔽 与css3冲突的滤镜(Alpha|Matrix|Gradient|FlipH|FlipV)</li>
+<li>IE9下transform属性免前缀</li>
+<li>IE6、7下兼容 <code>display : inline-block;</code>
+</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>cssprops<span class="pl-pds">"</span></span>);</pre></div>
+
+<h3>
+<a id="ie6下兼容-position-fixed" class="anchor" href="#ie6%E4%B8%8B%E5%85%BC%E5%AE%B9-position-fixed" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>IE6下兼容 <code>position: fixed;</code>
+</h3>
+
+<ul>
+<li>暂时只兼容left、top，right、bottom取值的单位为px的情形，其他单位的兼容正在开发中</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>posfixed<span class="pl-pds">"</span></span>);</pre></div>
+
+<h2>
+<a id="css3-免私有前缀-webkit--moz-等" class="anchor" href="#css3-%E5%85%8D%E7%A7%81%E6%9C%89%E5%89%8D%E7%BC%80-webkit--moz-%E7%AD%89" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>css3 免私有前缀(<code>-webkit-</code>、<code>-moz-</code>等)</h2>
+
+<ul>
+<li>css文件中免浏览器私有前缀</li>
+<li>js操作DOM对象中的样式，免浏览器私有前缀</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>prefixfree<span class="pl-pds">"</span></span>);</pre></div>
+
+<blockquote>
+<p>基于<a href="http://leaverou.github.io/prefixfree/">prefixfree</a></p>
+</blockquote>
+
+<h2>
+<a id="伪类和css3选择符兼容" class="anchor" href="#%E4%BC%AA%E7%B1%BB%E5%92%8Ccss3%E9%80%89%E6%8B%A9%E7%AC%A6%E5%85%BC%E5%AE%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>伪类和css3选择符兼容</h2>
+
+<ul>
+<li>为IE6-8下提供各种css选择符中的伪类选、伪对象、属性择器支持。基于<a href="http://www.selectivizr.com/">selectivizr</a>
+</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>jquery<span class="pl-pds">"</span></span>);  <span class="pl-c">//可使用的外部选择器有：Nwmatcher、MooTools等，见[原版selectivizr官网](http://www.selectivizr.com/)</span>
+    <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>selectivizr<span class="pl-pds">"</span></span>);</pre></div>
+
+<h2>
+<a id="媒体查询-media" class="anchor" href="#%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2-media" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>媒体查询 <a href="https://github.com/media" class="user-mention">@media</a>
+</h2>
+
+<ul>
+<li>为IE提响应式媒体查询css语句的支持</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>matchmedia<span class="pl-pds">"</span></span>);
+    <span class="pl-k">if</span> (<span class="pl-c1">window</span>.<span class="pl-en">matchMedia</span>(<span class="pl-s"><span class="pl-pds">"</span>(min-width:480px)<span class="pl-pds">"</span></span>).<span class="pl-smi">matches</span>) {
+        <span class="pl-c">//view port至少480px宽度  </span>
+    } <span class="pl-k">else</span> {
+        <span class="pl-c">//view port比480px宽度小  </span>
+    }
+    <span class="pl-k">if</span> (<span class="pl-c1">window</span>.<span class="pl-en">matchMedia</span>(<span class="pl-s"><span class="pl-pds">"</span>(max-msie:9)<span class="pl-pds">"</span></span>).<span class="pl-smi">matches</span>) {
+        <span class="pl-c">//IE6-9</span>
+    } <span class="pl-k">else</span> {
+        <span class="pl-c">//其他浏览器  </span>
+    }</pre></div>
+
+<div class="highlight highlight-source-css"><pre>    <span class="pl-k">@media</span> <span class="pl-c1">screen</span> <span class="pl-k">and</span> (<span class="pl-c1">min-width</span>: <span class="pl-c1">960<span class="pl-k">px</span></span>) {
+        <span class="pl-ent">body</span>{ <span class="pl-c1"><span class="pl-c1">background</span></span>: <span class="pl-c1">#999</span>; }
+    }</pre></div>
+
+<blockquote>
+<p>基于<a href="https://github.com/weblinc/media-match">media-match</a></p>
+</blockquote>
+
+<h2>
+<a id="兼容性查询-supports" class="anchor" href="#%E5%85%BC%E5%AE%B9%E6%80%A7%E6%9F%A5%E8%AF%A2-supports" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>兼容性查询 <a href="https://github.com/supports" class="user-mention">@supports</a>
+</h2>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>supports<span class="pl-pds">"</span></span>);
+    <span class="pl-c1">CSS</span>.<span class="pl-en">supports</span>(<span class="pl-s"><span class="pl-pds">"</span>display<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>flex<span class="pl-pds">"</span></span>);</pre></div>
+
+<div class="highlight highlight-source-css"><pre>    @supports ( display: flexbox ) {
+        #<span class="pl-c1">navigation</span>,
+        #<span class="pl-c1"><span class="pl-c1">content</span></span> {
+            <span class="pl-c1"><span class="pl-c1">display</span></span>: flexbox;
+        }
+    }</pre></div>
+
+<p>上面的规则表示，当浏览器支持弹性盒子布局时，括号里的所有样式将会生效</p>
+
+<p>基于<a href="https://github.com/termi/CSS.supports">CSS.supports</a></p>
+
+<h2>
+<a id="url查询-document" class="anchor" href="#url%E6%9F%A5%E8%AF%A2-document" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>url查询 <a href="https://github.com/document" class="user-mention">@document</a>
+</h2>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>document<span class="pl-pds">"</span></span>);</pre></div>
+
+<div class="highlight highlight-source-css"><pre>    @document url(http://www<span class="pl-e">.w3.org</span>/),
+                url-prefix(http://www<span class="pl-e">.w3.org</span>/Style/),
+                domain(mozilla<span class="pl-e">.org</span>),
+                regexp("https:.<span class="pl-ent">*</span>")
+    {
+        <span class="pl-c">/* 该条CSS规则会应用在下面的网页:</span>
+<span class="pl-c">         + URL为"http://www.w3.org/"的页面.</span>
+<span class="pl-c">         + 任何URL以"http://www.w3.org/Style/"开头的网页</span>
+<span class="pl-c">         + 任何主机名为"mozilla.org"或者主机名以".mozilla.org"结尾的网页     </span>
+<span class="pl-c">         + 任何URL以"https:"开头的网页 */</span>
+
+        <span class="pl-c">/* make the above-mentioned pages really ugly */</span>
+        <span class="pl-c1">body</span> { <span class="pl-c1"><span class="pl-c1">color</span></span>: <span class="pl-c1">purple</span>; <span class="pl-c1"><span class="pl-c1">background</span></span>: <span class="pl-c1">yellow</span>; }
+    }</pre></div>
+
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/@document">@document文档</a></p>
+
+<h2>
+<a id="长度单位兼容" class="anchor" href="#%E9%95%BF%E5%BA%A6%E5%8D%95%E4%BD%8D%E5%85%BC%E5%AE%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>长度单位兼容</h2>
+
+<ul>
+<li>IE兼容vw、vh、vmax、vmin、rem等相对长度单位</li>
+<li>移动端兼容绝对长度(忽略缩放)，如厘米(cm)、毫米(mm)、英寸(in)、点(pt)、派卡(pc)</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>cssunits<span class="pl-pds">"</span></span>);</pre></div>
+
+<h2>
+<a id="placeholder-文本框占位符" class="anchor" href="#placeholder-%E6%96%87%E6%9C%AC%E6%A1%86%E5%8D%A0%E4%BD%8D%E7%AC%A6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>placeholder 文本框占位符</h2>
+
+<ul>
+<li>为低端浏览器提供placeholder功能，为老版本浏览器抹平差异</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>placeholder<span class="pl-pds">"</span></span>);</pre></div>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/gucong3000">gucong3000</a> can be found on <a href="https://github.com/gucong3000/CSS3.js">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="https://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
