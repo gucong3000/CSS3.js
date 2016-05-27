@@ -1,0 +1,47 @@
+.postl,
+.postr {
+	top: 50px;
+}
+.posbl,
+.posbr {
+	bottom: 50px;
+}
+.postl,
+.posbl {
+	left: 50px;
+}
+.postr,
+.posbr {
+	right: 50px;
+}
+.fixed {
+	position: fixed;
+}
+.postl,
+.postr,
+.posbl,
+.posbr {
+	text-align: center;
+	line-height: 3em;
+	background: #ccc;
+	width: 3em;
+}
+label {
+	text-align: center;
+	position: fixed;
+	display: block;
+	width: 100%;
+	top: 50px;
+	left: 0;
+	zoom: 1;
+}
+hr {
+	border: 10px dashed #000;
+	width: 5000px;
+}
+.test {
+	background: red;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+}

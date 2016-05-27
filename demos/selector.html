@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="renderer" content="webkit">
+<meta charset="utf-8">
+<title>supports demo</title>
+<link rel="stylesheet" href="css/selector.css">
+<script src="../build/sea.js"></script>
+<script src="../build/css3.js"></script>
+<script>
+seajs.config({
+	debug: true,
+	base: "../build/"
+}).use(["jquery", "selectivizr"]);
+</script>
+</head>
+<body>
+<table border="1" align="center" cellpadding="0" cellspacing="0">
+	<thead>
+		<tr>
+			<th></th>
+			<th> <img src="http://selectivizr.com/images/logo-jquery-lib.png" alt="jQuery" height="26" width="80"> 1.3 / 1.4 </th>
+			<th> <img src="http://selectivizr.com/images/logo-dojo-lib.png" alt="Dojo" height="26" width="80"> 1.5.0 </th>
+			<th> <img src="http://selectivizr.com/images/logo-prototype-lib.png" alt="Prototype" height="26" width="80"> 1.6.1 </th>
+			<th> <img src="http://selectivizr.com/images/logo-yui-lib.png" alt="YUI" height="26" width="80"> 2.8.0 </th>
+			<th> <img src="http://selectivizr.com/images/logo-domassistant-lib.png" alt="DOMAssistant" height="26" width="80"> 2.8.0 </th>
+			<th> <img src="http://selectivizr.com/images/logo-mootools-lib.png" alt="MooTools" height="26" width="80"> 1.3 </th>
+			<th> <img src="http://selectivizr.com/images/logo-nwmatcher-lib.png" alt="NWMatcher" height="26" width="80"> 1.2.3 </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th>[attr]</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>[attr=]</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>[attr~=]</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>[attr|=]</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>[attr^=]</th>
+			<td>Fails to identify [attr^=""]</td>
+			<td>Fails to identify [attr^=""]</td>
+			<td>Fails to identify [attr^=""]</td>
+			<td>Yes</td>
+			<td>Fails to identify [attr^=""]</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>[attr$=]</th>
+			<td>Fails to identify [attr$=""]</td>
+			<td>Fails to identify [attr$=""]</td>
+			<td>Fails to identify [attr$=""]</td>
+			<td>Yes</td>
+			<td>Fails to identify [attr^=""]</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>[attr*=]</th>
+			<td>Fails to identify [attr*=""]</td>
+			<td>Fails to identify [attr*=""]</td>
+			<td>Fails to identify [attr*=""]</td>
+			<td>Yes</td>
+			<td>Fails to identify [attr*=""]</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:nth-child</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:nth-last-child</th>
+			<td>Selector not supported</td>
+			<td>Selects incorrect elements</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:nth-of-type</th>
+			<td>Selector not supported</td>
+			<td>Selects incorrect elements</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:nth-last-of-type</th>
+			<td>Selector not supported</td>
+			<td>Selects incorrect elements</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:first-child</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:last-child</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:only-child</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:first-of-type</th>
+			<td>Selector not supported</td>
+			<td>Selects incorrect elements</td>
+			<td>Yes</td>
+			<td>Selects incorrect elements</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:last-of-type</th>
+			<td>Selector not supported</td>
+			<td>Selects incorrect elements</td>
+			<td>Yes</td>
+			<td>Selects incorrect elements</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:only-of-type</th>
+			<td>Selector not supported</td>
+			<td>Selects incorrect elements</td>
+			<td>Yes</td>
+			<td>Selects incorrect elements</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:empty</th>
+			<td>Fails if element contains a HTML comment</td>
+			<td>Yes</td>
+			<td>Fails if element contains a HTML comment</td>
+			<td>Fails if element contains a HTML comment</td>
+			<td>Fails if element contains a HTML comment</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:enabled</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:disabled</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:checked</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:hover</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:focus</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:target †</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:not</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>:root</th>
+			<td>Selector not supported</td>
+			<td>Selector not supported</td>
+			<td>Selector not supported</td>
+			<td>Yes</td>
+			<td>Selector not supported</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>::first-line</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+		<tr>
+			<th>::first-letter</th>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+			<td>Yes</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<th></th>
+			<td><a href="http://jquery.com/">website</a></td>
+			<td><a href="http://www.dojotoolkit.org/">website</a></td>
+			<td><a href="http://www.prototypejs.org/">website</a></td>
+			<td><a href="http://developer.yahoo.com/yui/2/">website</a></td>
+			<td><a href="http://www.domassistant.com/">website</a></td>
+			<td><a href="http://mootools.net/">website</a></td>
+			<td><a href="http://javascript.nwbox.com/NWMatcher/">website</a></td>
+		</tr>
+	</tfoot>
+</table>
+</body>
+</html>

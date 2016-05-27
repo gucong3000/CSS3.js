@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="renderer" content="webkit">
+<meta charset="utf-8">
+<title>cssunits demo</title>
+<link rel="stylesheet" href="css/cssunits.css">
+<script src="../build/sea.js"></script>
+<script src="../build/css3.js"></script>
+<script>
+seajs.config({
+	debug: true,
+	base: "../build/"
+}).use(["matchmedia", "prefixfree", "cssunits"]);
+</script>
+</head>
+<body>
+	<div id='header'>
+		<a href="#">
+			<h1 id="logo">Resize the Window!</h1>
+		</a>
+		<div id='nav'>Navigation</div>
+	</div>
+	<div id="content">
+		<div id="highlights">Highlights</div>
+		<div id="news">
+			<div id="item1">News item 1</div>
+			<div id="item2">News item 2</div>
+			<div id="item3">News item 3</div>
+		</div>
+		<div id="ads">
+			<div id="ad1">ad 1</div>
+			<div id="ad2">ad 2</div>
+			<div id="ad3">ad 3</div>
+		</div>
+	</div>
+	<div id='footer'>Footer</div>
+</body>
+</html>

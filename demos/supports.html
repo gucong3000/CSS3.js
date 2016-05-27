@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="renderer" content="webkit">
+<meta charset="utf-8">
+<title>supports demo</title>
+<link rel="stylesheet" href="css/supports.css">
+<script src="../build/sea.js"></script>
+<script src="../build/css3.js"></script>
+<script>
+seajs.config({
+	debug: true,
+	base: "../build/"
+}).use(["jquery", "prefixfree", "supports"]);
+</script>
+</head>
+<body>
+	<div class="test">
+		<h2 class="supports">如果你的浏览器支持@supports，这行字会是绿色</h2>
+		<pre>
+@supports (display: block) {
+	/* 如果支持display: block,则下面指定的CSS会生效 */
+	.supports {
+		color: green;
+	}
+}
+		</pre>
+
+		<h2 class="supports-transform">检测是否支持transform属性或者其带前缀版本</h2>
+		<pre>
+/* 由于本demo同时也加载了prefixfree组件，所以无需写前缀 */
+@supports (transform:rotate(7deg)) {
+	.supports-transform {
+		transform: rotate(7deg);
+	}
+}
+		</pre>
+
+		<h2 class="supports-appearance">检测是否支持appearance属性或者其带前缀版本</h2>
+		<pre>
+/* 由于本demo同时也加载了prefixfree组件，所以无需写前缀 */
+@supports (appearance:button) {
+	.supports-appearance {
+		appearance: button;
+	}
+}
+		</pre>
+
+		<h2 class="supports-not">检测是否不支持指定的CSS属性</h2>
+		<div class="fixed"></div>
+		<pre>
+@supports ( not ((position: fixed)){
+	/* 如果不支持position: fixed */
+	position: absolute;
+}
+		</pre>
+	</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+.test {
+	width: 600px;
+	margin: 80px auto;
+}
+.supports {
+	color: red;
+}
+@supports (display:block) {
+	.supports {
+		color: green;
+	}
+}
+@supports (transform:rotate(7deg)) {
+	.supports-transform {
+		transform: rotate(7deg);
+	}
+}
+@supports (appearance:button) {
+	.supports-appearance {
+		appearance: button;
+	}
+}
+.fixed {
+	width: 100px;
+	height: 100px;
+	position: fixed;
+	left: 0;
+	top: 0;
+	background-color: red;
+}
+@supports (not(position:fixed)) {
+	.fixed {
+		background-color: green;
+		position: absolute;
+	}
+}

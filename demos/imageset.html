@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="renderer" content="webkit">
+<meta charset="utf-8">
+<title>imageset demo</title>
+<link rel="stylesheet" href="css/imageset.css">
+<script src="../build/sea.js"></script>
+<script src="../build/css3.js"></script>
+<script>
+seajs.config({
+	debug: true,
+	base: "../build/"
+}).use(["imageset"]);
+</script>
+</head>
+<body>
+<img srcset="http://mat1.gtimg.com/www/images/qq2012/qqlogo_1x.png 1x, http://mat1.gtimg.com/www/images/qq2012/qqlogo_2x.png 2x">
+</body>
+</html>
